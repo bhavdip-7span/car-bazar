@@ -28,3 +28,24 @@
 
   --spacing-xxl: 1920px;
 }
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: white;
+  border: 2px solid #3b82f6;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: white;
+  border: 2px solid #3b82f6;
+  cursor: pointer;
+  pointer-events: auto;
+}
