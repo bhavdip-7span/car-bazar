@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
+import Header from "@/components/common/header";
 
 export const metadata: Metadata = {
   title: "CarBazar – Buy Used Cars Online",
@@ -18,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
