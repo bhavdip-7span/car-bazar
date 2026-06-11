@@ -6,7 +6,6 @@ export default function MasterCard() {
   const loading = useCarStore((state) => state.loadingCar);
   console.log(loading);
   if (loading) {
-    console.log("hello");
     return <MasterCardSkeleton />;
   }
   return (
