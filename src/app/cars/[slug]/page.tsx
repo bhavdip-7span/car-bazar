@@ -12,6 +12,7 @@ export default function CarDetailPage() {
   const [carDetails, setCarDetails] = useState<Car | null>(null);
   const setCar = useCarStore((state) => state.setCar);
   const setSimilarCars = useCarStore((state) => state.setSimilarCars);
+  const loading = useCarStore((state) => state.loadingCar);
 
   const setLoadingRecommendedCars = useCarStore(
     (state) => state.setLoadingRecommendedCars,
@@ -21,14 +22,16 @@ export default function CarDetailPage() {
   const setLoadingSimilarCars = useCarStore(
     (state) => state.setLoadingSimilarCars,
   );
-
+  console.log("CAR DETAILS PAGE LOADED");
   const setRecommendedCars = useCarStore((state) => state.setRecommendedCar);
   const slug = params.slug as string;
   console.log(slug);
   useEffect(() => {
+    if (!slug) return;
     fetchCarDetails();
-  }, []);
+  }, [slug]);
   async function fetchCarDetails() {
+    if (!slug) return;
     try {
       setLoadingRecommendedCars(true);
       setLoadingSimilarCars(true);
@@ -39,7 +42,8 @@ export default function CarDetailPage() {
         .eq("slug", slug)
         .single();
       if (error) {
-        throw new Error("something want wrong");
+        console.log(error);
+        return;
       }
       if (data) {
         const { data: similarCar, error } = await supabase
@@ -69,20 +73,25 @@ export default function CarDetailPage() {
         setLoadingRecommendedCars(false);
       }
 
-      setCarDetails(data || []);
+      setCarDetails(data ?? null);
       setCar(data);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      } else {
-        console.log("Unknown error");
-      }
+    } catch (error) {
+      console.log("something went wrong");
     } finally {
       setLoading(false);
     }
   }
   return (
-    <div className="flex gap-4 mt-8 px-8 max-w-xxl mx-auto w-full">
+    <div className="flex gap-4 mt-8 px-8 max-w-xxl mx-auto w-full mb-8">
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/10  z-50">
+          <img
+            src="/car-animation.svg"
+            alt="car animation"
+            className="w-48 h-48"
+          />
+        </div>
+      )}
       <div className="flex flex-col gap-4 w-6/10">
         <div className=" rounded-lg overflow-hidden border border-gray-300">
           {carDetails ? (

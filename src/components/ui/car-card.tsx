@@ -7,15 +7,27 @@ import { useRouter } from "next/navigation";
 type CarCardProps = {
   cars: Car;
   imageCarousel?: boolean;
+  size?: "sm" | "md" | "lg";
 };
 
-export default function CarCard({ cars, imageCarousel = true }: CarCardProps) {
+export default function CarCard({
+  cars,
+  size = "md",
+  imageCarousel = true,
+}: CarCardProps) {
   const router = useRouter();
   const handleClick = () => {
     router.push(`/cars/${cars.slug}`);
   };
+  const cardWidth = {
+    sm: "w-72",
+    md: "w-96",
+    lg: "w-[28rem]",
+  };
   return (
-    <div className="w-96 rounded-xl overflow-hidden border border-secondary-300 cursor-pointer">
+    <div
+      className={`${cardWidth[size]} rounded-xl overflow-hidden border border-secondary-300 cursor-pointer`}
+    >
       {imageCarousel ? (
         <ImageCarousel images={cars.images} onClick={handleClick} />
       ) : (
