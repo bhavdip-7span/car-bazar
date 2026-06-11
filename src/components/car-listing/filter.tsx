@@ -8,6 +8,7 @@ import Input from "../ui/input";
 import type { Car } from "@/types/car";
 import { useRouter } from "next/navigation";
 import { useSearchParams, usePathname } from "next/navigation";
+
 import Button from "../ui/button";
 type Filters = {
   price: [number, number];
@@ -15,6 +16,7 @@ type Filters = {
   kms: [number, number];
   models: string[];
   brands: string[];
+  location: string[];
   fuelTypes: string[];
   transmissions: string[];
   colors: string[];
@@ -29,7 +31,7 @@ export default function Filter() {
       const { data, error } = await supabase
         .from("cars")
         .select(
-          "brand, model, color, fuel_type, transmission, registration_year, km_driven, original_price",
+          "brand, model, color, fuel_type, transmission, registration_year, km_driven, original_price,registration_location",
         );
 
       if (error) {
@@ -62,6 +64,9 @@ export default function Filter() {
     filters.fuelTypes.length
       ? params.set("fuel-types", filters.fuelTypes.join(","))
       : params.delete("fuel-types");
+    filters.location.length
+      ? params.set("location", filters.location.join(","))
+      : params.delete("location");
 
     filters.transmissions.length
       ? params.set("transmissions", filters.transmissions.join(","))
@@ -102,7 +107,7 @@ export default function Filter() {
         Number(searchParams.get("min-km")) || minKm,
         Number(searchParams.get("max-km")) || maxKm,
       ],
-
+      location: searchParams.get("location")?.split(",") || [],
       brands: searchParams.get("brands")?.split(",") || [],
       colors: searchParams.get("colors")?.split(",") || [],
       fuelTypes: searchParams.get("fuel-types")?.split(",") || [],
@@ -112,12 +117,14 @@ export default function Filter() {
   }, [cars]);
 
   const brands = [...new Set(cars.map((car) => car.brand?.trim()))];
+  console.log(brands);
   const models = [...new Set(cars.map((car) => car.model?.trim()))];
 
   const colors = [...new Set(cars.map((car) => car.color))];
 
   const fuelTypes = [...new Set(cars.map((car) => car.fuel_type))];
-
+  const location = [...new Set(cars.map((car) => car.registration_location))];
+  console.log(location);
   const transmissions = [...new Set(cars.map((car) => car.transmission))];
   const prices = cars.map((car) => car.original_price);
 
@@ -140,6 +147,7 @@ export default function Filter() {
     kms: [minKm, maxKm],
 
     brands: searchParams.get("brands")?.split(",") || [],
+    location: searchParams.get("location")?.split(",") || [],
     colors: searchParams.get("colors")?.split(",") || [],
     fuelTypes: searchParams.get("fuel-types")?.split(",") || [],
     transmissions: searchParams.get("transmissions")?.split(",") || [],
@@ -150,6 +158,7 @@ export default function Filter() {
     year: [minYear, maxYear],
     kms: [minKm, maxKm],
     brands: [],
+    location: [],
     colors: [],
     fuelTypes: [],
     transmissions: [],
@@ -181,7 +190,7 @@ export default function Filter() {
 
   return (
     <>
-      <div className="border-r min-w-96 border-secondary-600 min-h-screen px-8 flex flex-col gap-4">
+      <div className="px-8 flex flex-col gap-4 pb-10">
         <Button
           name="Clear Filters"
           variant="link"
@@ -251,35 +260,41 @@ export default function Filter() {
             />
           </div>
         </Accordion>
-        <Accordion title="Brand+model">
+        <Accordion title="Brand+Model">
           <Input placeholder="Search brand or model" className="w-full" />
           <div className="mt-4 flex flex-col gap-4">
-            {brands.map((brand) => (
-              <Checkbox
-                key={brand}
-                label={brand}
-                checked={filters.brands.includes(brand)}
-                onChange={() => {
-                  const newFilters = {
-                    ...filters,
-                    brands: filters.brands.includes(brand)
-                      ? filters.brands.filter((b) => b !== brand)
-                      : [...filters.brands, brand],
-                  };
+            <h4>Brand</h4>
+            <div className="max-h-36 overflow-y-auto scrollbar-thin">
+              {brands.map((brand) => (
+                <Checkbox
+                  key={brand}
+                  label={brand}
+                  checked={filters.brands.includes(brand)}
+                  onChange={() => {
+                    const newFilters = {
+                      ...filters,
+                      brands: filters.brands.includes(brand)
+                        ? filters.brands.filter((b) => b !== brand)
+                        : [...filters.brands, brand],
+                    };
 
-                  setFilters(newFilters);
-                  updateURL(newFilters);
-                }}
-              />
-            ))}
-            {models.map((brand) => (
-              <Checkbox
-                key={brand}
-                label={brand}
-                checked={filters.brands.includes(brand)}
-                onChange={() => toggleArrayFilter("brands", brand)}
-              />
-            ))}
+                    setFilters(newFilters);
+                    updateURL(newFilters);
+                  }}
+                />
+              ))}
+            </div>
+            <h4>Model</h4>
+            <div className="max-h-56 overflow-y-auto scrollbar-thin">
+              {models.map((brand) => (
+                <Checkbox
+                  key={brand}
+                  label={brand}
+                  checked={filters.brands.includes(brand)}
+                  onChange={() => toggleArrayFilter("brands", brand)}
+                />
+              ))}
+            </div>
           </div>
         </Accordion>
         <Accordion title="Km driven">
@@ -362,6 +377,28 @@ export default function Filter() {
                     colors: filters.colors.includes(brand)
                       ? filters.colors.filter((b) => b !== brand)
                       : [...filters.colors, brand],
+                  };
+
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                }}
+              />
+            ))}
+          </div>
+        </Accordion>
+        <Accordion title="Location">
+          <div className="mt-4 flex flex-col gap-4 max-h-96 overflow-scroll pb-8">
+            {location.map((brand) => (
+              <Checkbox
+                key={brand}
+                label={brand}
+                checked={filters.location.includes(brand)}
+                onChange={() => {
+                  const newFilters = {
+                    ...filters,
+                    location: filters.location.includes(brand)
+                      ? filters.location.filter((b) => b !== brand)
+                      : [...filters.location, brand],
                   };
 
                   setFilters(newFilters);
