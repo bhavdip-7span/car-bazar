@@ -14,7 +14,7 @@ const buttonVariants = cva(
   },
 );
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  VariantProps<typeof buttonVariants> & { name: string };
+  VariantProps<typeof buttonVariants> & { name: React.ReactNode };
 export default function Button({
   name,
   className,

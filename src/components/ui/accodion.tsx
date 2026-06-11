@@ -16,7 +16,7 @@ export default function Accordion({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border border-secondary-200 rounded-lg overflow-hidden">
+    <div className="border border-secondary-200 rounded-lg ">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -36,8 +36,8 @@ export default function Accordion({
       </button>
 
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-96" : "max-h-0"
+        className={` overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "max-h-[720px]" : "max-h-0"
         }`}
       >
         <div className="px-4 pb-4 mt-4">{children}</div>

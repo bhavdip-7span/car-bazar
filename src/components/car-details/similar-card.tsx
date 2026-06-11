@@ -21,7 +21,7 @@ export default function SimilarCard({ refProp }: Props) {
           <CarCardSkeleton />
         ) : car.length != 0 ? (
           car.map((car) => (
-            <CarCard key={car.id} cars={car} imageCarousel={false} />
+            <CarCard key={car.id} cars={car} imageCarousel={false} size="sm" />
           ))
         ) : (
           <p className="text-red-500 font-medium text-sm">
@@ -38,7 +38,7 @@ export default function SimilarCard({ refProp }: Props) {
           <CarCardSkeleton />
         ) : reCar.length != 0 ? (
           reCar.map((car) => (
-            <CarCard key={car.id} cars={car} imageCarousel={false} />
+            <CarCard key={car.id} cars={car} imageCarousel={false} size="sm" />
           ))
         ) : (
           <p className="text-red-500 font-medium text-sm">
