@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 type Props = {
+  className?: string;
   images: string[];
   onClick?: () => void;
 };
 
-export default function ImageCarousel({ images, onClick }: Props) {
+export default function ImageCarousel({ images, className, onClick }: Props) {
   const [current, setCurrent] = useState(0);
 
   if (!images?.length) return null;
@@ -21,7 +23,7 @@ export default function ImageCarousel({ images, onClick }: Props) {
   };
 
   return (
-    <div className="relative w-full h-48 overflow-hidden">
+    <div className={cn("relative w-full h-48 overflow-hidden", className)}>
       {/* Track */}
       <div
         onClick={onClick}
@@ -35,7 +37,7 @@ export default function ImageCarousel({ images, onClick }: Props) {
             key={i}
             src={img}
             alt={`slide-${i}`}
-            className="min-w-full h-48 flex-shrink-0 object-cover"
+            className="min-w-full h-full flex-shrink-0 object-cover"
           />
         ))}
       </div>

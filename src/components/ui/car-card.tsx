@@ -6,23 +6,27 @@ import ImageCarousel from "./image-carousel";
 import { useRouter } from "next/navigation";
 type CarCardProps = {
   cars: Car;
+  imageCarousel?: boolean;
 };
 
-export default function CarCard({ cars }: CarCardProps) {
+export default function CarCard({ cars, imageCarousel = true }: CarCardProps) {
   const router = useRouter();
   const handleClick = () => {
     router.push(`/cars/${cars.slug}`);
   };
   return (
     <div className="w-96 rounded-xl overflow-hidden border border-secondary-300 cursor-pointer">
-      {/* <div className="w-full h-48 overflow-hidden">
-        <img
-          src={cars.images?.[0]}
-          alt={cars.model}
-          className="w-full h-full object-cover"
-        />
-      </div> */}
-      <ImageCarousel images={cars.images} onClick={handleClick} />
+      {imageCarousel ? (
+        <ImageCarousel images={cars.images} onClick={handleClick} />
+      ) : (
+        <div className="w-full h-48 overflow-hidden" onClick={handleClick}>
+          <img
+            src={cars.images?.[0]}
+            alt={cars.model}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
       <div className="mt-4 px-4" onClick={handleClick}>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -32,7 +36,9 @@ export default function CarCard({ cars }: CarCardProps) {
               {cars.registration_year}
             </span>
           </div>
-          <p className="text-xl font-semibold"> {cars.original_price}</p>
+          <p className="text-xl font-semibold">
+            ₹ {cars.original_price.toLocaleString()}
+          </p>
         </div>
         <div className="mt-8">
           <div className="flex items-center text-sm text-secondary-600">
