@@ -23,7 +23,9 @@
       "@/components/*": ["./src/components/*"],
       "@/lib/*":["./src/lib/*"],
       "@/types/*":["./src/types/*"],
-        "@/utils/*":["./src/utils/*"]
+        "@/utils/*":["./src/utils/*"],
+        "@/store/*":["./src/store/*"],
+
 
     }
   },

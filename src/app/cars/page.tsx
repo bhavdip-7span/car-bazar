@@ -24,7 +24,7 @@ export default function Home() {
   const PAGE_SIZE = 12;
 
   const [data, setdata] = useState<Car[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
