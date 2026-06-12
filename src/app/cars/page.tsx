@@ -14,17 +14,18 @@ export default function Home() {
   const searchParamsString = searchParams.toString();
   const brands = searchParams.get("brands")?.split(",") || [];
   const colors = searchParams.get("colors")?.split(",") || [];
-  const fuelType = searchParams.get("fuel-types")?.split(",") || [];
+  const fuelType = searchParams.get("fuel_types")?.split(",") || [];
   const transmission = searchParams.get("transmissions")?.split(",") || [];
   const ownership = searchParams.get("ownership")?.split(",") || [];
   const seats = searchParams.get("seats")?.split(",") || [];
+  const bodyType = searchParams.get("body_type")?.split(",") || [];
 
-  const minPrice = searchParams.get("min-price");
-  const maxPrice = searchParams.get("max-price");
-  const minYear = searchParams.get("min-year");
-  const maxYear = searchParams.get("max-year");
-  const minKm = searchParams.get("min-km");
-  const maxKm = searchParams.get("max-km");
+  const minPrice = searchParams.get("min_price");
+  const maxPrice = searchParams.get("max_price");
+  const minYear = searchParams.get("min_year");
+  const maxYear = searchParams.get("max_year");
+  const minKm = searchParams.get("min_km");
+  const maxKm = searchParams.get("max_km");
   const engine = searchParams.get("engine_cc");
 
   const search = searchParams.get("search");
@@ -97,6 +98,9 @@ export default function Home() {
 
       if (seats.length) {
         query = query.in("seats", seats);
+      }
+      if (bodyType.length) {
+        query = query.in("body_type", bodyType);
       }
       if (colors.length) {
         query = query.in("color", colors);
@@ -238,7 +242,7 @@ export default function Home() {
               No cars found
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 items-center  gap-4">
               <AnimatePresence>
                 {data.map((car) => (
                   <motion.div
@@ -253,7 +257,7 @@ export default function Home() {
                       transition: { duration: 0.2 },
                     }}
                   >
-                    <CarCard cars={car} size="lg" />
+                    <CarCard cars={car} size="sm" />
                   </motion.div>
                 ))}
               </AnimatePresence>
