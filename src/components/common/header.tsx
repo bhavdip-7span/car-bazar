@@ -12,12 +12,9 @@ export default function Header() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [search, setSearch] = useState("");
+
   useEffect(() => {
-    setSearch(searchParams.get("search") || "");
-  }, [searchParams]);
-  useEffect(() => {
-    // Run search logic only on cars listing page
-    if (pathname !== "/cars") return;
+    // if (pathname !== "/cars") return;
 
     const timer = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
@@ -28,13 +25,15 @@ export default function Header() {
         params.delete("search");
       }
 
-      if (search.trim()) {
-        router.replace(`/cars?${params.toString()}`);
+      const newUrl = `/cars?${params.toString()}`;
+
+      if (newUrl !== `/cars?${searchParams.toString()}`) {
+        router.replace(newUrl);
       }
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, pathname, searchParams, router]);
+  }, [search]);
   return (
     <div className="bg-white border-b border-secondary-200 shadow">
       <div className="flex justify-between items-center  max-w-xxl mx-auto w-full h-20 px-8 ">
@@ -54,12 +53,9 @@ export default function Header() {
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              className="transition-all duration-300 group-hover:rotate-180 group-hover:fill-primary "
+              className="transition-all duration-300 group-hover:rotate-180 fill-secondary group-hover:fill-primary "
             >
-              <path
-                fill="#00000"
-                d="M8.12 14.71L12 10.83l3.88 3.88a.996.996 0 1 0 1.41-1.41L12.7 8.71a.996.996 0 0 0-1.41 0L6.7 13.3a.996.996 0 0 0 0 1.41c.39.38 1.03.39 1.42 0"
-              />
+              <path d="M8.12 14.71L12 10.83l3.88 3.88a.996.996 0 1 0 1.41-1.41L12.7 8.71a.996.996 0 0 0-1.41 0L6.7 13.3a.996.996 0 0 0 0 1.41c.39.38 1.03.39 1.42 0" />
             </svg>
             <div className="absolute z-[999] top-full left-0 0 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-white shadow-lg rounded-lg w-96 border border-secondary-200">
               <div className="p-4 text-sm font-semibold grid grid-cols-4 gap-4">
@@ -67,7 +63,7 @@ export default function Header() {
                   <Link
                     key={item}
                     href={`/cars?brands=${item}`}
-                    className="w-fit py-1 hover:bg-gray-100 rounded px-2 whitespace-nowrap"
+                    className="w-fit py-1 text-secondary hover:text-primary   px-2 whitespace-nowrap"
                   >
                     {item}
                   </Link>
@@ -86,12 +82,9 @@ export default function Header() {
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              className="transition-all duration-300 group-hover:rotate-180 group-hover:fill-primary "
+              className="transition-all duration-300 group-hover:rotate-180 fill-secondary group-hover:fill-primary "
             >
-              <path
-                fill="#00000"
-                d="M8.12 14.71L12 10.83l3.88 3.88a.996.996 0 1 0 1.41-1.41L12.7 8.71a.996.996 0 0 0-1.41 0L6.7 13.3a.996.996 0 0 0 0 1.41c.39.38 1.03.39 1.42 0"
-              />
+              <path d="M8.12 14.71L12 10.83l3.88 3.88a.996.996 0 1 0 1.41-1.41L12.7 8.71a.996.996 0 0 0-1.41 0L6.7 13.3a.996.996 0 0 0 0 1.41c.39.38 1.03.39 1.42 0" />
             </svg>
             <div className="absolute z-[999] top-full left-0 0 invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-white shadow-lg rounded-lg w-96 border border-secondary-200">
               <div className="p-4 text-sm font-semibold grid grid-cols-4 gap-4">
@@ -99,7 +92,7 @@ export default function Header() {
                   <Link
                     key={item}
                     href={`/cars?location=${item}`}
-                    className="w-fit py-1 hover:bg-gray-100 rounded px-2 whitespace-nowrap"
+                    className="w-fit py-1 text-secondary hover:text-primary   px-2 whitespace-nowrap"
                   >
                     {item}
                   </Link>
@@ -108,7 +101,7 @@ export default function Header() {
             </div>
           </div>
           <Link
-            className="font-semibold text-sm hover:text-primary "
+            className="font-semibold text-secondary text-sm hover:text-primary "
             href="/cars"
           >
             All Cars

@@ -20,18 +20,21 @@ export default function CarCard({
     router.push(`/cars/${cars.slug}`);
   };
   const cardWidth = {
-    sm: "w-72",
+    sm: "w-78",
     md: "w-96",
     lg: "w-[28rem]",
   };
   return (
     <div
-      className={`${cardWidth[size]} rounded-xl overflow-hidden border border-secondary-300 cursor-pointer`}
+      className={`${cardWidth[size]} rounded-xl overflow-hidden cursor-pointer p-2 shadow-lg border border-secondary-200`}
     >
       {imageCarousel ? (
         <ImageCarousel images={cars.images} onClick={handleClick} />
       ) : (
-        <div className="w-full h-48 overflow-hidden" onClick={handleClick}>
+        <div
+          className="w-full h-48 overflow-hidden rounded-lg"
+          onClick={handleClick}
+        >
           <img
             src={cars.images?.[0]}
             alt={cars.model}
@@ -42,7 +45,7 @@ export default function CarCard({
       <div className="mt-4 px-4" onClick={handleClick}>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <h3 className="text-2xl font-semibold">{cars.model}</h3>
+            <h3 className="text-xl font-semibold">{cars.model}</h3>
 
             <span className="px-2 py-1 text-[10px] font-medium rounded-md bg-secondary-100 text-secondary-600">
               {cars.registration_year}
