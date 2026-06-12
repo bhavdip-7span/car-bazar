@@ -23,8 +23,12 @@ export default function ImageCarousel({ images, className, onClick }: Props) {
   };
 
   return (
-    <div className={cn("relative w-full h-48 overflow-hidden", className)}>
-      {/* Track */}
+    <div
+      className={cn(
+        "relative w-full h-48 overflow-hidden rounded-lg",
+        className,
+      )}
+    >
       <div
         onClick={onClick}
         className="flex w-full h-full transition-transform duration-500 ease-in-out"
@@ -42,27 +46,24 @@ export default function ImageCarousel({ images, className, onClick }: Props) {
         ))}
       </div>
 
-      {/* Prev Button */}
       <button
         onClick={(e) => {
           prev();
         }}
-        className="absolute left-2 cursor-pointer top-1/2 -translate-y-1/2 bg-black/40 text-white px-2 rounded"
+        className="absolute left-2 cursor-pointer top-1/2 -translate-y-1/2  bg-white text-secondary opacity-70 hover:opacity-100 px-2 rounded-full shadow"
       >
         ❮
       </button>
 
-      {/* Next Button */}
       <button
         onClick={(e) => {
           next();
         }}
-        className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white px-2 rounded"
+        className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 bg-white text-secondary opacity-70 hover:opacity-100  px-2 rounded-full shadow"
       >
         ❯
       </button>
 
-      {/* Dots */}
       <div className="absolute bottom-2 w-full flex justify-center gap-1">
         {images.map((_, i) => (
           <span
