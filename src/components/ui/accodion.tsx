@@ -19,7 +19,7 @@ export default function Accordion({
   }, [defaultOpen]);
 
   return (
-    <div className="border border-secondary-200 rounded-lg ">
+    <div className="border border-secondary-200 rounded-lg shadow ">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
