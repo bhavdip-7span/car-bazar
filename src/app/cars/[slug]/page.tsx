@@ -7,6 +7,7 @@ import ImageCarousel from "@/components/ui/image-carousel";
 import TabScrollPage from "@/components/car-details/tab";
 import { useCarStore } from "@/store/car-store";
 import MasterCard from "@/components/car-details/master-card";
+import CompareBar from "@/components/common/compare-bar";
 export default function CarDetailPage() {
   const params = useParams();
   const [carDetails, setCarDetails] = useState<Car | null>(null);
@@ -105,6 +106,7 @@ export default function CarDetailPage() {
       <div className="w-4/10">
         <MasterCard />
       </div>
+      <CompareBar />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 type CheckboxProps = {
   label?: string;
   checked: boolean;
+  disabled?: boolean;
   onChange: (checked: boolean) => void;
   className?: string;
 };
@@ -12,6 +13,7 @@ export default function Checkbox({
   checked,
   onChange,
   className,
+  disabled,
 }: CheckboxProps) {
   return (
     <label
@@ -23,8 +25,12 @@ export default function Checkbox({
       <input
         type="checkbox"
         checked={checked}
+        disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-secondary-300 accent-primary"
+        className={cn(
+          "h-4 w-4 rounded border-secondary-300 accent-primary",
+          className,
+        )}
       />
 
       {label && <span className="text-sm text-secondary-700">{label}</span>}
