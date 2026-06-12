@@ -23,6 +23,7 @@ type Filters = {
   colors: string[];
   engine: string | null;
   seats: number[];
+  bodyType: string[];
 };
 export default function Filter() {
   const searchParams = useSearchParams();
@@ -36,7 +37,7 @@ export default function Filter() {
       const { data, error } = await supabase
         .from("cars")
         .select(
-          "brand, model, color, fuel_type, transmission, registration_year, km_driven, original_price,registration_location,ownership,seats",
+          "brand, model, color, fuel_type, transmission, registration_year, km_driven, original_price,registration_location,ownership,seats,body_type",
         );
 
       if (error) {
@@ -77,10 +78,13 @@ export default function Filter() {
     filters.colors.length
       ? params.set("colors", filters.colors.join(","))
       : params.delete("colors");
+    filters.bodyType.length
+      ? params.set("body_type", filters.bodyType.join(","))
+      : params.delete("body_type");
 
     filters.fuelTypes.length
-      ? params.set("fuel-types", filters.fuelTypes.join(","))
-      : params.delete("fuel-types");
+      ? params.set("fuel_types", filters.fuelTypes.join(","))
+      : params.delete("fuel_types");
     filters.location.length
       ? params.set("location", filters.location.join(","))
       : params.delete("location");
@@ -102,29 +106,29 @@ export default function Filter() {
       filters.price[0] !== minPrice || filters.price[1] !== maxPrice;
 
     if (isPriceChanged) {
-      params.set("min-price", String(filters.price[0]));
-      params.set("max-price", String(filters.price[1]));
+      params.set("min_price", String(filters.price[0]));
+      params.set("max_price", String(filters.price[1]));
     } else {
-      params.delete("min-price");
-      params.delete("max-price");
+      params.delete("min_price");
+      params.delete("max_price");
     }
 
     const isYearChanged =
       filters.year[0] !== minYear || filters.year[1] !== maxYear;
     if (isYearChanged) {
-      params.set("min-year", String(filters.year[0]));
-      params.set("max-year", String(filters.year[1]));
+      params.set("min_year", String(filters.year[0]));
+      params.set("max_year", String(filters.year[1]));
     } else {
-      params.delete("min-year");
-      params.delete("max-year");
+      params.delete("min_year");
+      params.delete("max_year");
     }
     const isKmChanged = filters.kms[0] !== minKm || filters.kms[1] !== maxKm;
     if (isKmChanged) {
-      params.set("min-km", String(filters.kms[0]));
-      params.set("max-km", String(filters.kms[1]));
+      params.set("min_km", String(filters.kms[0]));
+      params.set("max_km", String(filters.kms[1]));
     } else {
-      params.delete("min-km");
-      params.delete("max-km");
+      params.delete("min_km");
+      params.delete("max_km");
     }
     router.push(`?${params.toString()}`);
   };
@@ -133,21 +137,22 @@ export default function Filter() {
 
     setFilters({
       price: [
-        Number(searchParams.get("min-price")) || minPrice,
-        Number(searchParams.get("max-price")) || maxPrice,
+        Number(searchParams.get("min_price")) || minPrice,
+        Number(searchParams.get("max_price")) || maxPrice,
       ],
       year: [
-        Number(searchParams.get("min-year")) || minYear,
-        Number(searchParams.get("max-year")) || maxYear,
+        Number(searchParams.get("min_year")) || minYear,
+        Number(searchParams.get("max_year")) || maxYear,
       ],
       kms: [
-        Number(searchParams.get("min-km")) || minKm,
-        Number(searchParams.get("max-km")) || maxKm,
+        Number(searchParams.get("min_km")) || minKm,
+        Number(searchParams.get("max_km")) || maxKm,
       ],
       location: searchParams.get("location")?.split(",") || [],
+      bodyType: searchParams.get("location")?.split(",") || [],
       brands: searchParams.get("brands")?.split(",") || [],
       colors: searchParams.get("colors")?.split(",") || [],
-      fuelTypes: searchParams.get("fuel-types")?.split(",") || [],
+      fuelTypes: searchParams.get("fuel_types")?.split(",") || [],
       transmissions: searchParams.get("transmissions")?.split(",") || [],
       models: searchParams.get("models")?.split(",") || [],
       owner: searchParams.get("ownership")?.split(",") || [],
@@ -162,6 +167,7 @@ export default function Filter() {
 
   const colors = [...new Set(cars.map((car) => car.color))];
   const ownership = [...new Set(cars.map((car) => car.ownership))];
+  const bodyType = [...new Set(cars.map((car) => car.body_type))];
 
   const fuelTypes = [...new Set(cars.map((car) => car.fuel_type))];
   const location = [...new Set(cars.map((car) => car.registration_location))];
@@ -183,17 +189,18 @@ export default function Filter() {
 
   const initialFilters: Filters = {
     price: [
-      Number(searchParams.get("min-price")) || minPrice,
-      Number(searchParams.get("max-price")) || maxPrice,
+      Number(searchParams.get("min_price")) || minPrice,
+      Number(searchParams.get("max_price")) || maxPrice,
     ],
     year: [minYear, maxYear],
     kms: [minKm, maxKm],
 
     brands: searchParams.get("brands")?.split(",") || [],
+    bodyType: searchParams.get("brands")?.split(",") || [],
     seats: searchParams.get("seats")?.split(",").map(Number) || [],
     location: searchParams.get("location")?.split(",") || [],
     colors: searchParams.get("colors")?.split(",") || [],
-    fuelTypes: searchParams.get("fuel-types")?.split(",") || [],
+    fuelTypes: searchParams.get("fuel_types")?.split(",") || [],
     transmissions: searchParams.get("transmissions")?.split(",") || [],
     models: searchParams.get("models")?.split(",") || [],
     owner: searchParams.get("owner")?.split(",") || [],
@@ -209,13 +216,12 @@ export default function Filter() {
     seats: [],
     fuelTypes: [],
     transmissions: [],
+    bodyType: [],
     models: [],
     owner: [],
     engine: null,
   };
   const [filters, setFilters] = useState<Filters>(initialFilters);
-
-  const [bmw, setBmw] = useState(false);
 
   function clearFilter() {
     setFilters(defaultFilters);
@@ -649,6 +655,28 @@ export default function Filter() {
                     location: filters.location.includes(item)
                       ? filters.location.filter((b) => b !== item)
                       : [...filters.location, item],
+                  };
+
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                }}
+              />
+            ))}
+          </div>
+        </Accordion>
+        <Accordion title="Body Type" defaultOpen={expandAll}>
+          <div className="mt-4 flex flex-col gap-4 max-h-96 overflow-y-auto pb-8">
+            {bodyType.map((item) => (
+              <Checkbox
+                key={item}
+                label={item}
+                checked={filters.bodyType.includes(item)}
+                onChange={() => {
+                  const newFilters = {
+                    ...filters,
+                    bodyType: filters.bodyType.includes(item)
+                      ? filters.bodyType.filter((b) => b !== item)
+                      : [...filters.bodyType, item],
                   };
 
                   setFilters(newFilters);
