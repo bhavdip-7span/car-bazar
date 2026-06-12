@@ -1,13 +1,20 @@
 import { useCarStore } from "@/store/car-store";
+import { useCompareStore } from "@/store/comapre-car";
 import Button from "../ui/button";
 import MasterCardSkeleton from "./master-card-skeleton";
+import Checkbox from "../ui/checkbox";
 export default function MasterCard() {
   const car = useCarStore((state) => state.car);
+
+  const { cars, addCar, removeCar } = useCompareStore();
+  const isCompared = car ? cars.some((c) => c.id === car.id) : false;
   const loading = useCarStore((state) => state.loadingCar);
+  const disableCompare = !isCompared && cars.length >= 3;
   console.log(loading);
   if (loading) {
     return <MasterCardSkeleton />;
   }
+
   return (
     <div className=" sticky top-[200px] border border-gray-300 rounded-lg p-6">
       <span className="bg-primary-50 text-primary-800 tracking-wide font-semibold text-xs px-2 py-1 absolute top-2 right-2 rounded-lg">
@@ -48,7 +55,24 @@ export default function MasterCard() {
           <span className="w-48 h-4 animate-pulse bg-secondary-300 rounded-lg"></span>
         )}
       </div>
-      <Button name="View Seller Details" className="mt-4" />
+      <div className="flex gap-4 items-center mt-4">
+        <Button name="View Seller Details" />
+        {car && (
+          <Checkbox
+            label="Compare"
+            className="disabled:opacity-70 disabled:cursor-not-allowed"
+            disabled={disableCompare}
+            checked={isCompared}
+            onChange={(checked) => {
+              if (checked) {
+                addCar(car);
+              } else {
+                removeCar(car.id);
+              }
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
