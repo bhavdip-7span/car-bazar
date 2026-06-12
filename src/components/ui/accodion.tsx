@@ -23,7 +23,7 @@ export default function Accordion({
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-full flex items-center justify-between p-4 cursor-pointer"
+        className="w-full flex items-center justify-between p-4 cursor-pointer text-secondary-600"
       >
         <span className="font-medium">{title}</span>
 

@@ -8,7 +8,7 @@ const buttonVariants = cva(
         default: " text-white bg-primary hover:bg-primary-700",
         secondary: "hover:bg-gray-100  rounded-xl",
         outline: "hover:bg-gray-100 border border-gray-200",
-        link: "text-para p-0 hover:text-primary hover:underline",
+        link: "text-secondary p-0 hover:text-primary hover:underline",
       },
     },
   },
