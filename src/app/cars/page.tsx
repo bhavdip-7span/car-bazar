@@ -10,23 +10,26 @@ import CarCardSkeleton from "@/components/ui/car-card-skeleton";
 import { useSearchParams } from "next/navigation";
 export default function Home() {
   const searchParams = useSearchParams();
-
+  const [sortBy, setSortBy] = useState("relevance");
   const searchParamsString = searchParams.toString();
   const brands = searchParams.get("brands")?.split(",") || [];
   const colors = searchParams.get("colors")?.split(",") || [];
   const fuelType = searchParams.get("fuel-types")?.split(",") || [];
   const transmission = searchParams.get("transmissions")?.split(",") || [];
-  console.log(transmission);
+  const ownership = searchParams.get("ownership")?.split(",") || [];
+  const seats = searchParams.get("seats")?.split(",") || [];
+
   const minPrice = searchParams.get("min-price");
   const maxPrice = searchParams.get("max-price");
   const minYear = searchParams.get("min-year");
   const maxYear = searchParams.get("max-year");
   const minKm = searchParams.get("min-km");
   const maxKm = searchParams.get("max-km");
+  const engine = searchParams.get("engine_cc");
 
   const search = searchParams.get("search");
   const location = searchParams.get("location")?.split(",") || [];
-  console.log(location);
+
   const PAGE_SIZE = 12;
 
   const [data, setdata] = useState<Car[]>([]);
@@ -63,8 +66,9 @@ export default function Home() {
     setdata([]);
     setPage(0);
     setHasMore(true);
+
     fetchCars(0);
-  }, [searchParamsString]);
+  }, [searchParamsString, sortBy]);
   useEffect(() => {
     if (page === 0) return;
 
@@ -87,7 +91,13 @@ export default function Home() {
       if (brands.length) {
         query = query.in("brand", brands);
       }
+      if (ownership.length) {
+        query = query.in("ownership", ownership);
+      }
 
+      if (seats.length) {
+        query = query.in("seats", seats);
+      }
       if (colors.length) {
         query = query.in("color", colors);
       }
@@ -102,6 +112,13 @@ export default function Home() {
 
       if (transmission.length) {
         query = query.in("transmission", transmission);
+      }
+      if (engine) {
+        if (engine == "above_1999") {
+          query = query.gte("engine_cc", Number(1999));
+        } else {
+          query = query.lte("engine_cc", Number(engine));
+        }
       }
       if (minPrice) {
         query = query.gte("original_price", Number(minPrice));
@@ -124,6 +141,34 @@ export default function Home() {
 
       if (maxKm) {
         query = query.lte("km_driven", Number(maxKm));
+      }
+      switch (sortBy) {
+        case "price-asc":
+          query = query.order("original_price", { ascending: true });
+          break;
+
+        case "price-desc":
+          query = query.order("original_price", { ascending: false });
+          break;
+
+        case "km-asc":
+          query = query.order("km_driven", { ascending: true });
+          break;
+
+        case "km-desc":
+          query = query.order("km_driven", { ascending: false });
+          break;
+
+        case "year-desc":
+          query = query.order("registration_year", { ascending: false });
+          break;
+
+        case "year-asc":
+          query = query.order("registration_year", { ascending: true });
+          break;
+
+        default:
+          query = query.order("created_at", { ascending: false });
       }
       // pagination LAST
       query = query.range(from, to);
@@ -162,13 +207,38 @@ export default function Home() {
           <Filter />
         </div>
         <div className="flex-1 h-full overflow-y-auto scrollbar-thin">
+          <div className="mb-4">
+            <h1 className="font-bold text-2xl"> Used Cars for Sale </h1>
+            <p className="text-sm font-medium text-secondary-600">
+              Browse verified used cars from trusted sellers at competitive
+              prices.
+            </p>
+            <div className="flex items-center justify-between mt-4 pr-4">
+              <p className="font-semibold text-lg">
+                {data.length} Cars Available
+              </p>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="p-2 border border-secondary-300 rounded-lg shadow outline-none cursor-pointer"
+              >
+                <option value="relevance">Relevance</option>
+                <option value="price-asc">Price - Low to High</option>
+                <option value="price-desc">Price - High to Low</option>
+                <option value="km-asc">KM - Low to High</option>
+                <option value="km-desc">KM - High to Low</option>
+                <option value="year-desc">Newest First</option>
+                <option value="year-asc">Oldest First</option>
+              </select>
+            </div>
+          </div>
           {data.length == 0 && !loading ? (
             <div className="flex flex-col justify-center items-center min-h-full text-lg font-semibold">
               <img src="/no-found.svg" alt="no found" className="size-48"></img>
               No cars found
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8  items-start ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start ">
               <AnimatePresence>
                 {data.map((car) => (
                   <motion.div
@@ -183,7 +253,7 @@ export default function Home() {
                       transition: { duration: 0.2 },
                     }}
                   >
-                    <CarCard cars={car} />
+                    <CarCard cars={car} size="lg" />
                   </motion.div>
                 ))}
               </AnimatePresence>

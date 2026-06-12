@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type AccordionProps = {
   title: string;
@@ -14,13 +14,16 @@ export default function Accordion({
   defaultOpen = false,
 }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  useEffect(() => {
+    setIsOpen(defaultOpen);
+  }, [defaultOpen]);
 
   return (
     <div className="border border-secondary-200 rounded-lg ">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-full flex items-center justify-between p-4"
+        className="w-full flex items-center justify-between p-4 cursor-pointer"
       >
         <span className="font-medium">{title}</span>
 
