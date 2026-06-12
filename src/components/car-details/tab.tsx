@@ -97,14 +97,12 @@ export default function TabScrollPage() {
       <div ref={tabRef} className="h-1" />
 
       <div
-        className={`
-    sticky top-0 z-40 transition-all duration-300 flex items-center
-    ${
-      isSticky
-        ? "w-screen left-0 rounded-none border-b border-secondary-300 bg-white shadow-md px-8 pt-4"
-        : "rounded-xl border border-secondary-300 bg-white shadow px-3 pt-4"
-    }
-  `}
+        className={` ${
+          isSticky
+            ? "fixed top-0 inset-x-0 z-40 border-b border-secondary-300 bg-white shadow-md px-8 pt-4"
+            : "relative rounded-xl border border-secondary-300 bg-white shadow px-3 pt-4"
+        }
+    `}
       >
         {isSticky && (
           <Button
