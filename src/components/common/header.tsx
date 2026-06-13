@@ -12,6 +12,7 @@ export default function Header() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [search, setSearch] = useState("");
+  const isHomePage = pathname === "/";
 
   useEffect(() => {
     // if (pathname !== "/cars") return;
@@ -35,25 +36,35 @@ export default function Header() {
     return () => clearTimeout(timer);
   }, [search]);
   return (
-    <div className="bg-white border-b border-secondary-200 shadow">
+    <div
+      className={
+        isHomePage
+          ? "absolute top-0 left-0 right-0 z-50"
+          : "border-b border-secondary-200 shadow bg-white"
+      }
+    >
       <div className="flex justify-between items-center  max-w-xxl mx-auto w-full h-20 px-8 ">
         <Link href="/" className="flex items-center gap-2 cursor-pointers">
           <img src="/logo.ico" alt="logo" className="size-20" />
-          <span className="font-bold text-2xl">Car Bazar</span>
+          <p
+            className={` font-bold text-2xl ${isHomePage ? " text-white" : "text-black"}`}
+          >
+            Car <span className="text-primary"> Bazar</span>
+          </p>
         </Link>
         <div className="flex items-center gap-4">
           <div className="relative group flex gap-1 items-center">
             <Button
               variant="link"
               name="Brand"
-              className="hover:no-underline group-hover:text-primary"
+              className={`hover:no-underline group-hover:text-primary ${isHomePage ? "text-white" : "fill-secondary"}`}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              className="transition-all duration-300 group-hover:rotate-180 fill-secondary group-hover:fill-primary "
+              className={`transition-all duration-300 group-hover:rotate-180 ${isHomePage ? "fill-white" : "fill-secondary"} group-hover:fill-primary `}
             >
               <path d="M8.12 14.71L12 10.83l3.88 3.88a.996.996 0 1 0 1.41-1.41L12.7 8.71a.996.996 0 0 0-1.41 0L6.7 13.3a.996.996 0 0 0 0 1.41c.39.38 1.03.39 1.42 0" />
             </svg>
@@ -75,14 +86,14 @@ export default function Header() {
             <Button
               variant="link"
               name="Location"
-              className="hover:no-underline group-hover:text-primary"
+              className={`hover:no-underline group-hover:text-primary ${isHomePage ? "text-white" : "text-secondary"}`}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              className="transition-all duration-300 group-hover:rotate-180 fill-secondary group-hover:fill-primary "
+              className={`transition-all duration-300 group-hover:rotate-180 ${isHomePage ? "fill-white" : "fill-secondary"} group-hover:fill-primary `}
             >
               <path d="M8.12 14.71L12 10.83l3.88 3.88a.996.996 0 1 0 1.41-1.41L12.7 8.71a.996.996 0 0 0-1.41 0L6.7 13.3a.996.996 0 0 0 0 1.41c.39.38 1.03.39 1.42 0" />
             </svg>
@@ -101,7 +112,7 @@ export default function Header() {
             </div>
           </div>
           <Link
-            className="font-semibold text-secondary text-sm hover:text-primary "
+            className={`hover:no-underline hover:text-primary font-semibold text-sm ${isHomePage ? "text-white" : "text-secondary"}`}
             href="/cars"
           >
             All Cars
@@ -111,7 +122,7 @@ export default function Header() {
           <Input
             value={search}
             placeholder="Search cars by brand, model or variant..."
-            className="w-full"
+            className={`${isHomePage ? "text-white  placeholder:text-white" : "text-black"} w-full`}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
