@@ -231,7 +231,7 @@ export default function Filter() {
 
   return (
     <>
-      <div className="px-8 flex flex-col gap-4 pb-10 ">
+      <div className="flex flex-col gap-4 pb-10">
         <div className="flex items-center justify-between">
           <Button
             name={expandAll ? "Collapse All" : "Expand All"}

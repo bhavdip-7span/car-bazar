@@ -6,7 +6,7 @@ import CarCard from "@/components/ui/car-card";
 import { useEffect, useState, useRef } from "react";
 import type { Car } from "@/types/car";
 import CarCardSkeleton from "@/components/ui/car-card-skeleton";
-
+import Button from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 export default function Home() {
   const searchParams = useSearchParams();
@@ -19,7 +19,7 @@ export default function Home() {
   const ownership = searchParams.get("ownership")?.split(",") || [];
   const seats = searchParams.get("seats")?.split(",") || [];
   const bodyType = searchParams.get("body_type")?.split(",") || [];
-
+  const [filterOpen, setFilterOpen] = useState(false);
   const minPrice = searchParams.get("min_price");
   const maxPrice = searchParams.get("max_price");
   const minYear = searchParams.get("min_year");
@@ -206,9 +206,35 @@ export default function Home() {
   };
   return (
     <>
-      <div className="max-w-xxl mx-auto w-full px-8 mt-8 flex  gap-4 h-[calc(100vh-120px)] overflow-hidden">
-        <div className="min-w-96 h-full overflow-y-auto px-2 flex flex-col gap-4 scrollbar-thin">
+      {filterOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-black/40" />
+
+          <div className="absolute left-0 top-0  z-[9999] h-full w-4/5 bg-white shadow-xl p-4 overflow-y-auto animate-slideIn">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="font-semibold text-lg">Filters</h2>
+              <Button
+                onClick={() => setFilterOpen(false)}
+                name="✕"
+                className="rounded-lg px-2 py-1"
+                variant="outline"
+              ></Button>
+            </div>
+
+            <Filter />
+          </div>
+        </div>
+      )}
+      <div className="max-w-xxl mx-auto w-full px-4 md:px-8 mt-8 flex flex-col md:flex-row  gap-4 h-[calc(100vh-120px)] overflow-hidden">
+        <div className=" hidden min-w-78 h-full px-2 overflow-y-auto md:flex flex-col gap-4 scrollbar-thin">
           <Filter />
+        </div>
+        <div className="md:hidden flex justify-end">
+          <Button
+            onClick={() => setFilterOpen(true)}
+            className="px-4 py-2 bg-primary text-white rounded-lg shadow"
+            name="Filters"
+          ></Button>
         </div>
         <div className="flex-1 h-full overflow-y-auto scrollbar-thin">
           <div className="mb-4">
@@ -242,7 +268,7 @@ export default function Home() {
               No cars found
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 items-center  gap-4">
+            <div className="grid grid-cols-1 justify-items-center lg:grid-cols-2 xl:grid-cols-3 items-center  gap-4">
               <AnimatePresence>
                 {data.map((car) => (
                   <motion.div
@@ -257,7 +283,7 @@ export default function Home() {
                       transition: { duration: 0.2 },
                     }}
                   >
-                    <CarCard cars={car} size="sm" />
+                    <CarCard cars={car} />
                   </motion.div>
                 ))}
               </AnimatePresence>

@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200 mt-16 max-w-xxl w-full mx-auto px-8">
-      <div className="flex items-center py-4 justify-between  gap-8">
+    <footer className="bg-white border-t border-gray-200 mt-8 md:mt-16 max-w-xxl w-full mx-auto px-8">
+      <div className="flex flex-col md:flex-row items-center py-4 justify-between gap-4 md:gap-8">
         <div className=" text-center text-sm text-gray-500">
           © {new Date().getFullYear()} CarBazar. All rights reserved.
         </div>

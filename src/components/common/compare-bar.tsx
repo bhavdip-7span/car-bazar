@@ -15,7 +15,7 @@ export default function CompareBar() {
     router.push(`/compare-car/${ids.join("_vs_")}`);
   };
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-300 p-3 flex items-center justify-between z-50">
+    <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-300 p-3 flex items-center overflow-x-auto justify-between z-50">
       <div className="flex gap-3 divide-x divide-secondary">
         {cars.map((car) => (
           <div key={car.id} className="flex items-center gap-2 px-4 ">
@@ -63,7 +63,7 @@ export default function CompareBar() {
         <Button
           disabled={ids.length < 2}
           onClick={() => handleCompare()}
-          className=" disabled:opacity-70 disabled:cursor-not-allowed"
+          className=" disabled:opacity-70 disabled:cursor-not-allowed whitespace-nowrap"
           name={`Compare (${cars.length})`}
         ></Button>
       )}

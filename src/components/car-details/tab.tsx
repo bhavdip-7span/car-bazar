@@ -17,20 +17,18 @@ export default function TabScrollPage() {
 
   const [isSticky, setIsSticky] = useState(false);
   const tabRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsSticky(!entry.isIntersecting);
-      },
-      { threshold: 0 },
-    );
+    const handleScroll = () => {
+      if (!tabRef.current) return;
 
-    if (tabRef.current) {
-      observer.observe(tabRef.current);
-    }
+      const offset = tabRef.current.offsetTop;
+      setIsSticky(window.scrollY > offset);
+    };
 
-    return () => observer.disconnect();
+    handleScroll(); // run once on mount
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   useEffect(() => {
     const sections = [
@@ -97,12 +95,12 @@ export default function TabScrollPage() {
       <div ref={tabRef} className="h-1" />
 
       <div
-        className={` ${
+        className={`${
           isSticky
-            ? "fixed top-0 inset-x-0 z-40 border-b border-secondary-300 bg-white shadow-md px-8 pt-4"
-            : "relative rounded-xl border border-secondary-300 bg-white shadow px-3 pt-4"
+            ? "pb-2 md:pb-0 fixed top-0 inset-x-0 z-45 border-b border-secondary-300 bg-white shadow-md px-8 pt-4 overflow-x-auto whitespace-nowrap"
+            : "pb-2 md:pb-0 relative rounded-xl border border-secondary-300 bg-white shadow px-3 pt-4 w-full overflow-x-auto whitespace-nowrap"
         }
-    `}
+      `}
       >
         {isSticky && (
           <Button

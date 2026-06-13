@@ -3,16 +3,17 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { popularBrands } from "@/constant/popular-brand";
+import Badge from "../ui/badge";
 export default function PopularBrandSection() {
   const brands = [...popularBrands, ...popularBrands];
   return (
-    <section className="max-w-xxl mx-auto w-full mt-8 px-8">
+    <section className="max-w-xxl mx-auto w-full mt-8 px-4 md:px-8">
       <div className="text-center mb-12">
-        <span className="text-primary font-medium">TOP BRANDS</span>
+        <Badge name="TOP BRANDS" />
 
-        <h2 className="text-4xl font-bold mt-2">Browse by Brand</h2>
+        <h2 className=" text-xl md:text-4xl font-bold mt-2">Browse by Brand</h2>
 
-        <p className="text-muted-foreground mt-4">
+        <p className="text-muted-foreground mt-2 md:mt-4">
           Explore thousands of verified used cars from leading manufacturers.
         </p>
       </div>

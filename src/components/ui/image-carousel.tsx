@@ -69,7 +69,7 @@ export default function ImageCarousel({ images, className, onClick }: Props) {
           <span
             key={i}
             onClick={() => setCurrent(i)}
-            className={`w-2 h-2 rounded-full cursor-pointer transition-all ${
+            className={`w-2 h-2 rounded-full cursor-pointer transition-all shadow ${
               i === current ? "bg-white scale-125" : "bg-gray-400"
             }`}
           />
