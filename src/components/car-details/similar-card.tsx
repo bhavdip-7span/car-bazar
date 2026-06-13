@@ -16,35 +16,43 @@ export default function SimilarCard({ refProp }: Props) {
       ref={refProp}
     >
       <h3 className="text-xl font-semibold">Similar Cars</h3>
-      <div className="mt-8 grid grid-cols-2 gap-4">
-        {loadingSimiler ? (
-          <CarCardSkeleton />
-        ) : car.length != 0 ? (
-          car.map((car) => (
-            <CarCard key={car.id} cars={car} imageCarousel={false} size="sm" />
-          ))
-        ) : (
-          <p className="text-red-500 font-medium text-sm">
-            No similar cars found
-          </p>
-        )}
+      <div className="mt-8 relative">
+        <div className="flex gap-4 overflow-x-auto flex-nowrap scroll-smooth snap-x snap-mandatory scrollbar-thin">
+          {loadingSimiler ? (
+            <CarCardSkeleton />
+          ) : car.length !== 0 ? (
+            car.map((car) => (
+              <div key={car.id} className="flex-shrink-0 snap-start w-[280px]">
+                <CarCard cars={car} imageCarousel={false} />
+              </div>
+            ))
+          ) : (
+            <p className="text-red-500 font-medium text-sm">
+              No similar cars found
+            </p>
+          )}
+        </div>
       </div>
 
       <h3 className="text-xl font-semibold mt-8 pt-4 border-t border-gray-300">
         Recommended Cars
       </h3>
-      <div className="mt-8 grid grid-cols-2 gap-4">
-        {loading ? (
-          <CarCardSkeleton />
-        ) : reCar.length != 0 ? (
-          reCar.map((car) => (
-            <CarCard key={car.id} cars={car} imageCarousel={false} size="sm" />
-          ))
-        ) : (
-          <p className="text-red-500 font-medium text-sm">
-            No recomemended cars found
-          </p>
-        )}
+      <div className="mt-8 relative">
+        <div className="flex gap-4 overflow-x-auto flex-nowrap scroll-smooth snap-x snap-mandatory scrollbar-thin">
+          {loading ? (
+            <CarCardSkeleton />
+          ) : reCar.length !== 0 ? (
+            reCar.map((car) => (
+              <div key={car.id} className="flex-shrink-0 snap-start w-[280px]">
+                <CarCard cars={car} imageCarousel={false} />
+              </div>
+            ))
+          ) : (
+            <p className="text-red-500 font-medium text-sm">
+              No similar cars found
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

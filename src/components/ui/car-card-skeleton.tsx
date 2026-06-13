@@ -1,13 +1,12 @@
 export default function CarCardSkeleton() {
   return (
-    <div className="w-96 rounded-xl overflow-hidden border border-secondary-300 animate-pulse h-96">
+    <div className="w-64 rounded-xl overflow-hidden border border-secondary-300 animate-pulse h-96">
       <div className="w-full h-48 bg-gray-300" />
 
       <div className="mt-4 px-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="h-6 w-32 bg-gray-300 rounded" />
-            <div className="h-5 w-12 bg-gray-300 rounded" />
           </div>
 
           <div className="h-6 w-20 bg-gray-300 rounded" />

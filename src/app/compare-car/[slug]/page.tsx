@@ -43,16 +43,14 @@ export default function CarCompare() {
   }
   return (
     <div className="flex flex-col gap-4 px-8">
-      <h1 className="text-3xl font-bold mb-8 w-fit mx-auto mt-4">
-        Compare Cars
-      </h1>
-      <div className="flex justify-center items-center gap-4">
+      <h1 className="text-3xl font-bold w-fit mx-auto mt-4">Compare Cars</h1>
+      <div className="flex flex-col md:flex-row justify-center items-center gap-4">
         {cars.map((item) => (
           <CarCard key={item.id} cars={item} imageCarousel={false} />
         ))}
       </div>
 
-      <div className="mt-10 flex flex-col gap-8 mb-4">
+      <div className="mt-10 flex flex-col gap-8 mb-4 overflow-x-auto">
         {compareSections.map((section) => (
           <div
             key={section.title}

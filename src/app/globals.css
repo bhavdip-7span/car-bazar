@@ -49,3 +49,16 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   pointer-events: auto;
 }
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
