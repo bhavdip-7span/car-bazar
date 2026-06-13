@@ -43,16 +43,16 @@ export default function Header() {
           : "border-b border-secondary-200 shadow bg-white"
       }
     >
-      <div className="flex justify-between items-center  max-w-xxl mx-auto w-full h-20 px-8 ">
+      <div className="flex justify-between items-center  max-w-xxl mx-auto w-full h-20 px-4 lg:px-8 ">
         <Link href="/" className="flex items-center gap-2 cursor-pointers">
-          <img src="/logo.ico" alt="logo" className="size-20" />
+          <img src="/logo.ico" alt="logo" className="size-16 lg::size-20" />
           <p
-            className={` font-bold text-2xl ${isHomePage ? " text-white" : "text-black"}`}
+            className={` font-bold text-base lg:text-2xl ${isHomePage ? " text-white" : "text-black"}`}
           >
             Car <span className="text-primary"> Bazar</span>
           </p>
         </Link>
-        <div className="flex items-center gap-4">
+        <nav className=" items-center gap-4 hidden md:flex">
           <div className="relative group flex gap-1 items-center">
             <Button
               variant="link"
@@ -117,12 +117,12 @@ export default function Header() {
           >
             All Cars
           </Link>
-        </div>
-        <div className="max-w-1/3 w-full">
+        </nav>
+        <div className=" max-w-3/5 md:max-w-1/3 w-full">
           <Input
             value={search}
             placeholder="Search cars by brand, model or variant..."
-            className={`${isHomePage ? "text-white  placeholder:text-white" : "text-black"} w-full`}
+            className={`${isHomePage ? "text-white  placeholder:text-white" : "text-black placeholder:text-secondary"} w-full`}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>

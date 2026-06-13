@@ -6,12 +6,9 @@ type Props = {
 export default function OverviewCard({ refProp }: Props) {
   const car = useCarStore((state) => state.car);
   return (
-    <div
-      ref={refProp}
-      className="border border-gray-200 p-6 rounded-lg  shadow"
-    >
+    <div ref={refProp} className="border border-gray-200 p-6 rounded-lg shadow">
       <h3 className="text-xl font-semibold">Car Overview</h3>
-      <div className="grid grid-cols-4 gap-8 mt-8 font-semibold text-sm">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-8 font-semibold text-sm">
         <div className="flex flex-col gap-4 text-secondary-400">
           <div className="flex gap-2 items-center">
             <svg
