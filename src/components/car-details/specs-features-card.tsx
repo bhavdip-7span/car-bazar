@@ -31,7 +31,7 @@ export default function SpecsFeaturesCard({ refProp }: Props) {
       </div>
       <div className="border border-gray-200 p-6 rounded-lg  shadow">
         <h3 className="text-xl font-semibold">Specifications</h3>
-        <div className="grid grid-cols-4 gap-8 mt-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-8 text-sm">
           <div className="flex flex-col gap-4 text-secondary-400">
             <div className="flex items-center gap-2">
               <svg
