@@ -2,7 +2,7 @@
 import Button from "./button";
 import { Car } from "@/types/car";
 import ImageCarousel from "./image-carousel";
-
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Badge from "./badge";
 import TransmissionIcon from "../icons/transmission";
@@ -38,13 +38,14 @@ export default function CarCard({
         <ImageCarousel images={cars.images} onClick={handleClick} />
       ) : (
         <div
-          className="w-full h-48 overflow-hidden rounded-lg"
+          className="relative w-full h-48 overflow-hidden rounded-lg"
           onClick={handleClick}
         >
-          <img
-            src={cars.images?.[0]}
+          <Image
+            src={cars.images?.[0] || "/placeholder-car.jpg"}
             alt={cars.model}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
           />
         </div>
       )}

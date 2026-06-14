@@ -3,6 +3,7 @@ import { useCompareStore } from "@/store/comapre-car";
 
 import Button from "../ui/button";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 export default function CompareBar() {
   const router = useRouter();
   const { cars, removeCar } = useCompareStore();
@@ -25,11 +26,12 @@ export default function CompareBar() {
               onClick={() => removeCar(car.id)}
               name={" ✕"}
             />
-            <div className="h-18 w-18 rounded-lg overflow-hidden">
-              <img
+            <div className=" relative h-18 w-18 rounded-lg overflow-hidden">
+              <Image
                 src={car.images[0]}
-                alt=" car image"
-                className="w-full h-full object-cover"
+                alt="car image"
+                fill
+                className="object-cover"
               />
             </div>
             <div>

@@ -1,11 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
 export default function HeroSection() {
   return (
     <section className="relative h-[100vh] max-w-xxl mx-auto w-full">
-      <img
+      <Image
         src="/hero-car-image.jpg"
         alt="hero section image"
-        className="absolute inset-0 w-full h-full object-cover"
+        fill
+        priority
+        className="object-cover"
       />
 
       <div className="absolute inset-0 bg-black/40" />
