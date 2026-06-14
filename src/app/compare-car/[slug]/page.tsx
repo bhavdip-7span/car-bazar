@@ -3,21 +3,23 @@ import { useCompareStore } from "@/store/comapre-car";
 import { compareSections } from "@/constant/compare-section";
 import CarCard from "@/components/ui/car-card";
 import { Car } from "@/types/car";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import Button from "@/components/ui/button";
+import Image from "next/image";
 export default function CarCompare() {
   const params = useParams();
-  const [checkParams, setCheckParams] = useState(true);
+  const slug = params.slug as string;
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    if (params.slug != compareSlug) {
-      setCheckParams(false);
-      console.log("hello");
-    }
-  }, [params.slug]);
+    setMounted(true);
+  }, []);
   const { cars } = useCompareStore();
-  const compareSlug = cars.map((car) => car.slug).join("_vs_");
+  const compareSlug = cars.length
+    ? cars.map((car) => car.slug).join("_vs_")
+    : null;
 
   function getWinnerIndexes(
     cars: Car[],
@@ -46,14 +48,19 @@ export default function CarCompare() {
       .map((value, index) => (value === target ? index : -1))
       .filter((index) => index !== -1);
   }
-  if (!checkParams) {
+  const isReady = mounted && cars.length > 0;
+  const isInvalidSlug = isReady && slug !== compareSlug;
+  if (!mounted) return null;
+  if (isInvalidSlug) {
     return (
       <div className="flex min-h-[100vh-120x] justify-center items-center flex-col">
-        <img
+        <Image
           src="/page-not-found.svg"
           alt="page not found"
-          className="size-48 md:size-96"
-        ></img>
+          width={384}
+          height={384}
+          className="w-48 h-48 md:w-96 md:h-96"
+        />
         <h1 className=" text-lg md:text-xl font-semibold">
           Comparison Not Found
         </h1>

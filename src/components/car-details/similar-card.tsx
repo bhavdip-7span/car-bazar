@@ -2,6 +2,7 @@ import { useCarStore } from "@/store/car-store";
 import CarCard from "../ui/car-card";
 import CarCardSkeleton from "../ui/car-card-skeleton";
 import Link from "next/link";
+import Image from "next/image";
 import Button from "../ui/button";
 type Props = {
   refProp: React.RefObject<HTMLDivElement | null>;
@@ -30,11 +31,13 @@ export default function SimilarCard({ refProp }: Props) {
             ))
           ) : (
             <div className="flex flex-col justify-center items-center w-full">
-              <img
+              <Image
                 src="/page-not-found.svg"
-                alt="no found"
-                className=" size-48"
-              ></img>
+                alt="page not found"
+                width={192}
+                height={192}
+                className="w-48 h-48 "
+              />
               <h3 className="text-2xl font-semibold mt-4">
                 No Similar Cars Found
               </h3>

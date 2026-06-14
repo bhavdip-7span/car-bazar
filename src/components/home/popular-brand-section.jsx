@@ -58,6 +58,7 @@ export default function PopularBrandSection() {
                   width={60}
                   height={60}
                   className="object-contain"
+                  loading="lazy"
                 />
 
                 <span className="font-medium text-center">{brand.name}</span>

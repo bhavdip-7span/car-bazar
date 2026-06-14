@@ -7,9 +7,9 @@ export async function getCarBySlug(slug: string) {
     .eq("slug", slug)
     .single();
 
-  if (error) {
-    return null;
+  if (error || !data) {
+    console.log("CAR_NOT_FOUND");
   }
 
-  return data;
+  return data ?? null;
 }

@@ -11,6 +11,10 @@ import MasterCard from "@/components/car-details/master-card";
 import CompareBar from "@/components/car-details/compare-bar";
 import Footer from "@/components/home/footer";
 import Link from "next/link";
+import Image from "next/image";
+import { getCarBySlug } from "@/service/get-car";
+import { getSimilarCars } from "@/service/get-similar-car";
+import { getRecommendedCars } from "@/service/get-recommended-car";
 export default function CarDetailPage() {
   const params = useParams();
   const [notFound, setNotFound] = useState(false);
@@ -30,7 +34,7 @@ export default function CarDetailPage() {
   console.log("CAR DETAILS PAGE LOADED");
   const setRecommendedCars = useCarStore((state) => state.setRecommendedCar);
   const slug = params.slug as string;
-  console.log(slug);
+
   useEffect(() => {
     if (!slug) return;
     fetchCarDetails();
@@ -41,51 +45,26 @@ export default function CarDetailPage() {
       setLoadingRecommendedCars(true);
       setLoadingSimilarCars(true);
       setLoading(true);
-      const { data, error } = await supabase
-        .from("cars")
-        .select("*")
-        .eq("slug", slug)
-        .single();
-      if (error) {
-        console.log(error);
-        setNotFound(true);
+      const data = await getCarBySlug(slug);
+      setCar(data);
+      setCarDetails(data);
 
+      if (data) {
+        const similarCar = await getSimilarCars(data, slug);
+        const recommendedCars = await getRecommendedCars(data, slug);
+        setSimilarCars(similarCar);
+        setRecommendedCars(recommendedCars);
+      } else {
+        setNotFound(true);
         return;
       }
-      if (data) {
-        const { data: similarCar, error } = await supabase
-          .from("cars")
-          .select("*")
-          .eq("body_type", data?.body_type)
-          .gte("original_price", data.original_price - 300000)
-          .lte("original_price", data.original_price + 300000)
-          .neq("slug", slug)
-          .limit(8);
-        setLoadingSimilarCars(false);
-
-        if (similarCar) {
-          setSimilarCars(similarCar);
-        }
-
-        const { data: recommendedCar } = await supabase
-          .from("cars")
-          .select("*")
-          .lt("original_price", data?.original_price + 200000)
-          .gt("original_price", data?.original_price - 200000)
-          .neq("slug", slug)
-          .limit(8);
-        if (recommendedCar) {
-          setRecommendedCars(recommendedCar);
-        }
-        setLoadingRecommendedCars(false);
-      }
-
-      setCarDetails(data ?? null);
-
-      setCar(data);
-    } catch (error) {
-      console.log("something went wrong");
+    } catch (err: any) {
+      setNotFound(true);
+      return;
     } finally {
+      setLoading(false);
+      setLoadingSimilarCars(false);
+      setLoadingRecommendedCars(false);
       setLoading(false);
     }
   }
@@ -122,11 +101,13 @@ export default function CarDetailPage() {
   if (notFound) {
     return (
       <div className="flex min-h-[100vh-120x] justify-center items-center flex-col">
-        <img
+        <Image
           src="/page-not-found.svg"
           alt="page not found"
-          className="size-48 md:size-96"
-        ></img>
+          width={384}
+          height={384}
+          className="w-48 h-48 md:w-96 md:h-96"
+        />
         <h1 className=" text-lg md:text-xl font-semibold">Car not found</h1>
         <p className=" text-sm md:text-base font-medium text-secondary-400">
           The car you are looking for does not exist.
@@ -154,9 +135,11 @@ export default function CarDetailPage() {
         <div className="flex flex-col lg:flex-row gap-4 mt-8 px-4 md:px-8 max-w-xxl mx-auto w-full">
           {loading && (
             <div className="fixed inset-0 flex  items-center justify-center bg-black/10  z-50">
-              <img
+              <Image
                 src="/car-animation.svg"
                 alt="car animation"
+                width={192}
+                height={192}
                 className="w-48 h-48"
               />
             </div>

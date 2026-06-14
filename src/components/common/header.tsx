@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { CarBrands } from "@/constant/car-brand";
 import { useRouter, usePathname } from "next/navigation";
 import Button from "../ui/button";
+import Image from "next/image";
 
 import { CarCitys } from "@/constant/car-city";
 export default function Header() {
@@ -44,7 +45,9 @@ export default function Header() {
     >
       <div className="flex justify-between items-center  max-w-xxl mx-auto w-full h-20 px-4 lg:px-8 ">
         <Link href="/" className="flex items-center gap-2 cursor-pointers">
-          <img src="/logo.ico" alt="logo" className="size-16 lg::size-20" />
+          <div className="relative w-16 h-16 lg:w-20 lg:h-20">
+            <Image src="/logo.ico" alt="logo" fill className="object-contain" />
+          </div>
           <p
             className={` font-bold text-base lg:text-2xl ${isHomePage ? " text-white" : "text-black"}`}
           >
