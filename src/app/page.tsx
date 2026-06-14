@@ -1,4 +1,5 @@
 import CTASection from "@/components/home/cta-section";
+import FeaturedCar from "@/components/home/featured-car";
 import Footer from "@/components/home/footer";
 
 import HeroSection from "@/components/home/hero-section";
@@ -8,6 +9,7 @@ export default function Home() {
     <>
       <HeroSection />
       <PopularBrandSection />
+      <FeaturedCar />
       <CTASection />
       <Footer />
     </>
