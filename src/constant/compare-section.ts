@@ -30,6 +30,21 @@ export const compareSections = [
         key: "ownership",
         better: "lower",
       },
+      {
+        label: "Engine cc",
+        key: "engine_cc",
+        better: "higher",
+      },
+      {
+        label: "Power",
+        key: "power",
+        better: "higher",
+      },
+      {
+        label: "Mileage",
+        key: "mileage",
+        better: "higher",
+      },
     ],
   },
 ] as const;

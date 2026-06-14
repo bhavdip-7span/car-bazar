@@ -263,9 +263,13 @@ export default function Home() {
             </div>
           </div>
           {data.length == 0 && !loading ? (
-            <div className="flex flex-col justify-center items-center min-h-full text-lg font-semibold">
-              <img src="/no-found.svg" alt="no found" className="size-48"></img>
-              No cars found
+            <div className="flex flex-col  gap-2 items-center  text-lg font-semibold">
+              <img
+                src="/page-not-found.svg"
+                alt="no found"
+                className=" size-48 md:h-64 w-96"
+              ></img>
+              <p> Car not found</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 justify-items-center lg:grid-cols-2 xl:grid-cols-3 items-center  gap-4">
