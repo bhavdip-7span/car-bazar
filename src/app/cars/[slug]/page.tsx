@@ -7,7 +7,7 @@ import ImageCarousel from "@/components/ui/image-carousel";
 import TabScrollPage from "@/components/car-details/tab";
 import { useCarStore } from "@/store/car-store";
 import MasterCard from "@/components/car-details/master-card";
-import CompareBar from "@/components/common/compare-bar";
+import CompareBar from "@/components/car-details/compare-bar";
 import Footer from "@/components/home/footer";
 export default function CarDetailPage() {
   const params = useParams();

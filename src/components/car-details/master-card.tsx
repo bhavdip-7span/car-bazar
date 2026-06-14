@@ -4,6 +4,10 @@ import Button from "../ui/button";
 import MasterCardSkeleton from "./master-card-skeleton";
 import Checkbox from "../ui/checkbox";
 import Badge from "../ui/badge";
+import TransmissionIcon from "../icons/transmission";
+import FuelTyepIcon from "../icons/fuel-type";
+import OwnerShipIcon from "../icons/ownership";
+import KmDrivenIcon from "../icons/km-driven";
 export default function MasterCard() {
   const car = useCarStore((state) => state.car);
 
@@ -27,63 +31,19 @@ export default function MasterCard() {
       <p className="font-semibold text-secondary-700">{car?.variant}</p>
       <div className="flex gap-4 items-center mt-2 text-sm text-secondary-500 divide-x divide-secondary-300">
         <div className="flex items-center gap-2 pr-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="#2f6bff"
-              d="M4 21q-1.25 0-2.125-.875T1 18q0-.975.563-1.75T3 15.175v-6.35q-.875-.3-1.437-1.075T1 6q0-1.25.875-2.125T4 3t2.125.875T7 6q0 .975-.562 1.75T5 8.825V11h6V8.825q-.875-.3-1.437-1.075T9 6q0-1.25.875-2.125T12 3t2.125.875T15 6q0 .975-.562 1.75T13 8.825V11h5q.425 0 .713-.287T19 10V8.825q-.875-.3-1.437-1.075T17 6q0-1.25.875-2.125T20 3t2.125.875T23 6q0 .975-.562 1.75T21 8.825V10q0 1.25-.875 2.125T18 13h-5v2.175q.875.3 1.438 1.075T15 18q0 1.25-.875 2.125T12 21t-2.125-.875T9 18q0-.975.563-1.75T11 15.175V13H5v2.175q.875.3 1.438 1.075T7 18q0 1.25-.875 2.125T4 21m0-2q.425 0 .713-.288T5 18t-.288-.712T4 17t-.712.288T3 18t.288.713T4 19M4 7q.425 0 .713-.288T5 6t-.288-.712T4 5t-.712.288T3 6t.288.713T4 7m8 12q.425 0 .713-.288T13 18t-.288-.712T12 17t-.712.288T11 18t.288.713T12 19m0-12q.425 0 .713-.288T13 6t-.288-.712T12 5t-.712.288T11 6t.288.713T12 7m8 0q.425 0 .713-.288T21 6t-.288-.712T20 5t-.712.288T19 6t.288.713T20 7m0-1"
-            />
-          </svg>
+          <TransmissionIcon className="fill-primary" />
           <span>{car?.transmission}</span>
         </div>
         <div className="flex items-center gap-2 pr-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="#2f6bff"
-              d="M12.275 19q.3-.025.513-.238T13 18.25q0-.35-.225-.562T12.2 17.5q-1.025.075-2.175-.562t-1.45-2.313q-.05-.275-.262-.45T7.825 14q-.35 0-.575.263t-.15.612q.425 2.275 2 3.25t3.175.875M12 22q-3.425 0-5.712-2.35T4 13.8q0-2.5 1.988-5.437T12 2q4.025 3.425 6.013 6.363T20 13.8q0 3.5-2.287 5.85T12 22"
-            />
-          </svg>
+          <FuelTyepIcon className="fill-primary" />
           <span>{car?.fuel_type}</span>
         </div>
         <div className="flex items-center gap-2 pr-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="#2f6bff"
-              d="M12 12q-1.65 0-2.825-1.175T8 8t1.175-2.825T12 4t2.825 1.175T16 8t-1.175 2.825T12 12m-8 6v-.8q0-.85.438-1.562T5.6 14.55q1.55-.775 3.15-1.162T12 13t3.25.388t3.15 1.162q.725.375 1.163 1.088T20 17.2v.8q0 .825-.587 1.413T18 20H6q-.825 0-1.412-.587T4 18"
-            />
-          </svg>
+          <OwnerShipIcon className="fill-primary" />
           <span>{car?.ownership}</span>
         </div>
         <div className="flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="#2f6bff"
-              d="M12 4C6.486 4 2 8.486 2 14a9.9 9.9 0 0 0 1.051 4.445c.17.34.516.555.895.555h16.107c.379 0 .726-.215.896-.555A9.9 9.9 0 0 0 22 14c0-5.514-4.486-10-10-10m7.41 13H4.59A7.9 7.9 0 0 1 4 14c0-4.411 3.589-8 8-8s8 3.589 8 8a7.9 7.9 0 0 1-.59 3"
-            />
-            <path
-              fill="#2f6bff"
-              d="M10.939 12.939a1.53 1.53 0 0 0 0 2.561a1.53 1.53 0 0 0 2.121-.44l3.962-6.038a.03.03 0 0 0 0-.035a.033.033 0 0 0-.045-.01z"
-            />
-          </svg>
+          <KmDrivenIcon className="fill-primary" />
           <span>{car?.km_driven}</span>
         </div>
       </div>

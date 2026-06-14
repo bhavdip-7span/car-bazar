@@ -149,7 +149,7 @@ export default function Filter() {
         Number(searchParams.get("max_km")) || maxKm,
       ],
       location: searchParams.get("location")?.split(",") || [],
-      bodyType: searchParams.get("location")?.split(",") || [],
+      bodyType: searchParams.get("body_type")?.split(",") || [],
       brands: searchParams.get("brands")?.split(",") || [],
       colors: searchParams.get("colors")?.split(",") || [],
       fuelTypes: searchParams.get("fuel_types")?.split(",") || [],
@@ -196,7 +196,7 @@ export default function Filter() {
     kms: [minKm, maxKm],
 
     brands: searchParams.get("brands")?.split(",") || [],
-    bodyType: searchParams.get("brands")?.split(",") || [],
+    bodyType: searchParams.get("body_type")?.split(",") || [],
     seats: searchParams.get("seats")?.split(",").map(Number) || [],
     location: searchParams.get("location")?.split(",") || [],
     colors: searchParams.get("colors")?.split(",") || [],

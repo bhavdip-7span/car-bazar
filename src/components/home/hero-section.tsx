@@ -4,6 +4,7 @@ export default function HeroSection() {
     <section className="relative h-[100vh] max-w-xxl mx-auto w-full">
       <img
         src="/hero-car-image.jpg"
+        alt="hero section image"
         className="absolute inset-0 w-full h-full object-cover"
       />
 
