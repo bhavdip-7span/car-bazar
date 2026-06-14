@@ -1,4 +1,7 @@
 import { useCarStore } from "@/store/car-store";
+import TransmissionIcon from "../icons/transmission";
+import FuelTyepIcon from "../icons/fuel-type";
+import EngineIcon from "../icons/engine";
 type Props = {
   refProp: React.RefObject<HTMLDivElement | null>;
 };
@@ -34,52 +37,15 @@ export default function SpecsFeaturesCard({ refProp }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-8 text-sm">
           <div className="flex flex-col gap-4 text-secondary-400">
             <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-              >
-                <g
-                  fill="none"
-                  stroke="#bdbdbd"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                >
-                  <path d="M14.25 21a2.249 2.249 0 1 0 4.498 0a2.249 2.249 0 0 0-4.498 0m-10.5 0a2.25 2.25 0 1 0 4.5 0a2.25 2.25 0 0 0-4.5 0m10.632.75H8.118" />
-                  <path d="M3.881 21.75H2.25a1.5 1.5 0 0 1-1.5-1.5v-1.5a3 3 0 0 1 3-3l1.835-3.671a1.5 1.5 0 0 1 1.342-.829h4.9a1.5 1.5 0 0 1 1.342.829L15 15.75h5.25a3 3 0 0 1 3 3v1.5a1.5 1.5 0 0 1-1.5 1.5h-3.13m-3.62-6H3.75" />
-                  <path d="m15 15.75l4.5-4.5h3m0-3.75a2.45 2.45 0 0 1-.75-1.841c0-1.227 1.5-1.841 1.5-3.068A2.45 2.45 0 0 0 22.5.75M18 9a2.45 2.45 0 0 1-.75-1.841c0-1.227 1.5-1.841 1.5-3.068A2.45 2.45 0 0 0 18 2.25" />
-                </g>
-              </svg>
+              <EngineIcon />
               <span>Engine cc</span>
             </div>
             <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="#bdbdbd"
-                  d="M4 21q-1.25 0-2.125-.875T1 18q0-.975.563-1.75T3 15.175v-6.35q-.875-.3-1.437-1.075T1 6q0-1.25.875-2.125T4 3t2.125.875T7 6q0 .975-.562 1.75T5 8.825V11h6V8.825q-.875-.3-1.437-1.075T9 6q0-1.25.875-2.125T12 3t2.125.875T15 6q0 .975-.562 1.75T13 8.825V11h5q.425 0 .713-.287T19 10V8.825q-.875-.3-1.437-1.075T17 6q0-1.25.875-2.125T20 3t2.125.875T23 6q0 .975-.562 1.75T21 8.825V10q0 1.25-.875 2.125T18 13h-5v2.175q.875.3 1.438 1.075T15 18q0 1.25-.875 2.125T12 21t-2.125-.875T9 18q0-.975.563-1.75T11 15.175V13H5v2.175q.875.3 1.438 1.075T7 18q0 1.25-.875 2.125T4 21m0-2q.425 0 .713-.288T5 18t-.288-.712T4 17t-.712.288T3 18t.288.713T4 19M4 7q.425 0 .713-.288T5 6t-.288-.712T4 5t-.712.288T3 6t.288.713T4 7m8 12q.425 0 .713-.288T13 18t-.288-.712T12 17t-.712.288T11 18t.288.713T12 19m0-12q.425 0 .713-.288T13 6t-.288-.712T12 5t-.712.288T11 6t.288.713T12 7m8 0q.425 0 .713-.288T21 6t-.288-.712T20 5t-.712.288T19 6t.288.713T20 7m0-1"
-                />
-              </svg>
+              <TransmissionIcon />
               <span>Transmission</span>
             </div>
             <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="#bdbdbd"
-                  d="M12.275 19q.3-.025.513-.238T13 18.25q0-.35-.225-.562T12.2 17.5q-1.025.075-2.175-.562t-1.45-2.313q-.05-.275-.262-.45T7.825 14q-.35 0-.575.263t-.15.612q.425 2.275 2 3.25t3.175.875M12 22q-3.425 0-5.712-2.35T4 13.8q0-2.5 1.988-5.437T12 2q4.025 3.425 6.013 6.363T20 13.8q0 3.5-2.287 5.85T12 22"
-                />
-              </svg>
+              <FuelTyepIcon />
               <span>Fuel Type</span>
             </div>
           </div>

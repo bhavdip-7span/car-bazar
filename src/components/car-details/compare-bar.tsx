@@ -1,6 +1,6 @@
 "use client";
 import { useCompareStore } from "@/store/comapre-car";
-import Link from "next/link";
+
 import Button from "../ui/button";
 import { useRouter } from "next/navigation";
 export default function CompareBar() {
@@ -18,7 +18,7 @@ export default function CompareBar() {
     <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-300 p-3 flex items-center overflow-x-auto justify-between z-50">
       <div className="flex gap-3 divide-x divide-secondary">
         {cars.map((car) => (
-          <div key={car.id} className="flex items-center gap-2 px-4 ">
+          <div key={car.id} className="flex items-center gap-2 px-4">
             <Button
               variant="outline"
               className="p-2 rounded-full"
