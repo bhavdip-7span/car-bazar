@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function CompareBar() {
   const router = useRouter();
   const { cars, removeCar } = useCompareStore();
-  const ids = cars.map((c) => c.id);
+  const ids = cars.map((c) => c.slug);
   console.log(ids.length);
   if (cars.length === 0) return null;
   const handleCompare = () => {

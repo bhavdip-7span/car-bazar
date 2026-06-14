@@ -1,5 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase";
+
 import { motion, AnimatePresence } from "framer-motion";
 import Filter from "@/components/car-listing/filter";
 import CarCard from "@/components/ui/car-card";
@@ -8,6 +9,7 @@ import type { Car } from "@/types/car";
 import CarCardSkeleton from "@/components/ui/car-card-skeleton";
 import Button from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
+
 export default function Home() {
   const searchParams = useSearchParams();
   const [sortBy, setSortBy] = useState("relevance");
