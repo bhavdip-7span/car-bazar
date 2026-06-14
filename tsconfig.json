@@ -25,7 +25,8 @@
       "@/types/*":["./src/types/*"],
         "@/utils/*":["./src/utils/*"],
         "@/store/*":["./src/store/*"],
-        "@/constant/*":["./src/constant/*"]
+        "@/constant/*":["./src/constant/*"],
+        "@/service/*":["./src/service/*"],
 
 
     }
