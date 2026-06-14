@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 
 import { motion, AnimatePresence } from "framer-motion";
 import Filter from "@/components/car-listing/filter";
+import { useRecentViewStore } from "@/store/recently-viewed-car";
 import CarCard from "@/components/ui/car-card";
 import { useEffect, useState, useRef } from "react";
 import type { Car } from "@/types/car";
@@ -13,6 +14,8 @@ import { useSearchParams } from "next/navigation";
 export default function CarClinet() {
   const searchParams = useSearchParams();
   const [sortBy, setSortBy] = useState("relevance");
+  const recentCar = useRecentViewStore((s) => s.recentCars);
+  const clearRecentCar = useRecentViewStore((s) => s.clearRecent);
   const searchParamsString = searchParams.toString();
   const brands = searchParams.get("brands")?.split(",") || [];
   const colors = searchParams.get("colors")?.split(",") || [];
@@ -246,7 +249,7 @@ export default function CarClinet() {
               prices.
             </p>
             <div className="flex items-center justify-between mt-4 pr-4">
-              <p className="font-semibold text-lg">
+              <p className="font-semibold text-sm">
                 {data.length} Cars Available
               </p>
               <select
@@ -274,32 +277,56 @@ export default function CarClinet() {
               <p> Car not found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 justify-items-center lg:grid-cols-2 xl:grid-cols-3 items-center  gap-4">
-              <AnimatePresence>
-                {data.map((car) => (
-                  <motion.div
-                    key={car.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    whileHover={{
-                      y: -2,
-                      transition: { duration: 0.2 },
-                    }}
-                  >
-                    <CarCard cars={car} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+            <>
+              <div className=" p-4 border border-gray-300 rounded-lg shadow mb-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="font-semibold text-xl text-primary-500">
+                    Recently viewed cars
+                  </h2>
+                  <Button
+                    name="Clear"
+                    className="rounded-lg disabled:opacity-70 disabled:cursor-not-allowed px-4 py-2"
+                    disabled={recentCar.length == 0}
+                    onClick={() => clearRecentCar()}
+                  ></Button>
+                </div>
+                <div className="flex mb-4 gap-4 overflow-x-auto flex-nowrap scroll-smooth snap-x snap-mandatory scrollbar-thin ">
+                  {recentCar.length != 0
+                    ? recentCar.map((item) => (
+                        <div className="flex-shrink-0 max-w-78">
+                          <CarCard cars={item} key={item.slug} />
+                        </div>
+                      ))
+                    : "No cars viewed yet"}
+                </div>
+              </div>
+              <div className="grid grid-cols-1 justify-items-center lg:grid-cols-2 xl:grid-cols-3 items-center  gap-4">
+                <AnimatePresence>
+                  {data.map((car) => (
+                    <motion.div
+                      key={car.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      whileHover={{
+                        y: -2,
+                        transition: { duration: 0.2 },
+                      }}
+                    >
+                      <CarCard cars={car} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
 
-              {loading &&
-                Array.from({ length: 6 }).map((_, i) => (
-                  <CarCardSkeleton key={i} />
-                ))}
-              <div ref={loadMoreRef} className="h-10" />
-            </div>
+                {loading &&
+                  Array.from({ length: 6 }).map((_, i) => (
+                    <CarCardSkeleton key={i} />
+                  ))}
+                <div ref={loadMoreRef} className="h-10" />
+              </div>
+            </>
           )}
         </div>
       </div>

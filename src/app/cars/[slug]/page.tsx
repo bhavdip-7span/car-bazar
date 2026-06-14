@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { supabase } from "@/lib/supabase";
+import { useRecentViewStore } from "@/store/recently-viewed-car";
 import { useParams } from "next/navigation";
 import { Car } from "@/types/car";
 import ImageCarousel from "@/components/ui/image-carousel";
@@ -20,6 +20,7 @@ export default function CarDetailPage() {
   const [notFound, setNotFound] = useState(false);
   const [carDetails, setCarDetails] = useState<Car | null>(null);
   const setCar = useCarStore((state) => state.setCar);
+  const addRecentCar = useRecentViewStore((s) => s.addRecentCar);
   const setSimilarCars = useCarStore((state) => state.setSimilarCars);
   const loading = useCarStore((state) => state.loadingCar);
 
@@ -50,6 +51,7 @@ export default function CarDetailPage() {
       setCarDetails(data);
 
       if (data) {
+        addRecentCar(data);
         const similarCar = await getSimilarCars(data, slug);
         const recommendedCars = await getRecommendedCars(data, slug);
         setSimilarCars(similarCar);
