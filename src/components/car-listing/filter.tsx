@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+
 import RangeSlider from "../ui/range-silder";
 import Accordion from "../ui/accodion";
 import Checkbox from "../ui/checkbox";
@@ -8,8 +8,10 @@ import Input from "../ui/input";
 import type { Car } from "@/types/car";
 import { useRouter } from "next/navigation";
 import { useSearchParams, usePathname } from "next/navigation";
-
+import Image from "next/image";
 import Button from "../ui/button";
+
+import { getFilter } from "@/service/get-filter";
 type Filters = {
   price: [number, number];
   year: [number, number];
@@ -34,14 +36,11 @@ export default function Filter() {
   const [filteredBrandModel, setFilteredBrandModel] = useState<string[]>([]);
   async function fetchCars() {
     try {
-      const { data, error } = await supabase.from("cars").select("*");
+      const data = await getFilter();
 
-      if (error) {
-        console.log(error.message);
-        return;
+      if (data) {
+        setCars(data);
       }
-
-      setCars(data ?? []);
     } catch (error) {
       console.log("something wrong", error);
       setCars([]);
@@ -226,10 +225,27 @@ export default function Filter() {
   }
   const isFiltersActive = searchParams.toString() ? true : false;
   const isBelow5L = filters.price[0] === minPrice && filters.price[1] <= 500000;
-  const isBetween5Lto8L =
-    filters.price[0] >= 500000 && filters.price[1] <= 800000;
+
   const isAbove10L =
     filters.price[0] >= 1000000 && filters.price[1] === maxPrice;
+  if (cars.length == 0) {
+    return (
+      <div className="flex flex-col justify-center items-center w-full">
+        <Image
+          src="/page-not-found.svg"
+          alt="page not found"
+          width={192}
+          height={192}
+          className="w-48 h-48 "
+        />
+        <h3 className="text-2xl font-semibold mt-4">No Cars Found</h3>
+
+        <p className="text-secondary mt-2 max-w-96 text-center w-full">
+          Couldn't find a cars please try again later.
+        </p>
+      </div>
+    );
+  }
   return (
     <>
       <div className="flex flex-col gap-4 pb-10">
