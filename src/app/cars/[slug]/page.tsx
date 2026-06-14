@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+
 import { supabase } from "@/lib/supabase";
 import { useParams } from "next/navigation";
 import { Car } from "@/types/car";
@@ -80,6 +81,7 @@ export default function CarDetailPage() {
       }
 
       setCarDetails(data ?? null);
+
       setCar(data);
     } catch (error) {
       console.log("something went wrong");
@@ -87,6 +89,36 @@ export default function CarDetailPage() {
       setLoading(false);
     }
   }
+  const schema = carDetails
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Car",
+
+        name: `${carDetails.brand} ${carDetails.model}`,
+        brand: {
+          "@type": "Brand",
+          name: carDetails.brand,
+        },
+
+        model: carDetails.model,
+        vehicleModelDate: carDetails.registration_year,
+
+        fuelType: carDetails.fuel_type,
+
+        mileageFromOdometer: {
+          "@type": "QuantitativeValue",
+          value: carDetails.km_driven,
+          unitCode: "KMT",
+        },
+
+        offers: {
+          "@type": "Offer",
+          price: carDetails.discount_price,
+          priceCurrency: "INR",
+        },
+      }
+    : null;
+
   if (notFound) {
     return (
       <div className="flex min-h-[100vh-120x] justify-center items-center flex-col">
@@ -109,40 +141,50 @@ export default function CarDetailPage() {
     );
   }
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col lg:flex-row gap-4 mt-8 px-4 md:px-8 max-w-xxl mx-auto w-full">
-        {loading && (
-          <div className="fixed inset-0 flex  items-center justify-center bg-black/10  z-50">
-            <img
-              src="/car-animation.svg"
-              alt="car animation"
-              className="w-48 h-48"
-            />
-          </div>
-        )}
-        <div className="flex flex-col gap-4 w-full lg:w-6/10">
-          <div className=" rounded-lg overflow-hidden border border-gray-300">
-            {carDetails ? (
-              <ImageCarousel
-                images={carDetails?.images || []}
-                className="h-98"
+    <>
+      {schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(schema),
+          }}
+        />
+      )}
+      <div className="flex flex-col">
+        <div className="flex flex-col lg:flex-row gap-4 mt-8 px-4 md:px-8 max-w-xxl mx-auto w-full">
+          {loading && (
+            <div className="fixed inset-0 flex  items-center justify-center bg-black/10  z-50">
+              <img
+                src="/car-animation.svg"
+                alt="car animation"
+                className="w-48 h-48"
               />
-            ) : (
-              <div className="bg-secondary-300 animate-pulse w-full h-98"></div>
-            )}
+            </div>
+          )}
+          <div className="flex flex-col gap-4 w-full lg:w-6/10">
+            <div className=" rounded-lg overflow-hidden border border-gray-300">
+              {carDetails ? (
+                <ImageCarousel
+                  images={carDetails?.images || []}
+                  className="h-98"
+                />
+              ) : (
+                <div className="bg-secondary-300 animate-pulse w-full h-98"></div>
+              )}
+            </div>
+            <div className="block lg:hidden w-full">
+              <MasterCard />
+            </div>
+            <TabScrollPage />
           </div>
-          <div className="block lg:hidden w-full">
+          <div className="hidden lg:block w-4/10">
             <MasterCard />
           </div>
-          <TabScrollPage />
-        </div>
-        <div className="hidden lg:block w-4/10">
-          <MasterCard />
-        </div>
 
-        <CompareBar />
+          <CompareBar />
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
