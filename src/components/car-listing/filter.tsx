@@ -31,23 +31,20 @@ export default function Filter() {
   const pathname = usePathname();
   const [carModelSearch, setCarModelSearch] = useState("");
   const [cars, setCars] = useState<Car[]>([]);
-  const [filteredBrandModel, setFilteredBrandModel] = useState([]);
+  const [filteredBrandModel, setFilteredBrandModel] = useState<string[]>([]);
   async function fetchCars() {
     try {
-      const { data, error } = await supabase
-        .from("cars")
-        .select(
-          "brand, model, color, fuel_type, transmission, registration_year, km_driven, original_price,registration_location,ownership,seats,body_type",
-        );
+      const { data, error } = await supabase.from("cars").select("*");
 
       if (error) {
         console.log(error.message);
         return;
       }
 
-      setCars(data || []);
+      setCars(data ?? []);
     } catch (error) {
       console.log("something wrong", error);
+      setCars([]);
     }
   }
 
@@ -159,7 +156,7 @@ export default function Filter() {
       seats: searchParams.get("seats")?.split(",").map(Number) || [],
       engine: searchParams.get("engine_cc"),
     });
-  }, [cars]);
+  }, [cars, searchParams]);
 
   const brands = [...new Set(cars.map((car) => car.brand?.trim()))];
 
@@ -228,7 +225,11 @@ export default function Filter() {
     router.push(pathname);
   }
   const isFiltersActive = searchParams.toString() ? true : false;
-
+  const isBelow5L = filters.price[0] === minPrice && filters.price[1] <= 500000;
+  const isBetween5Lto8L =
+    filters.price[0] >= 500000 && filters.price[1] <= 800000;
+  const isAbove10L =
+    filters.price[0] >= 1000000 && filters.price[1] === maxPrice;
   return (
     <>
       <div className="flex flex-col gap-4 pb-10">
@@ -266,67 +267,29 @@ export default function Filter() {
           <div className="mt-4 flex flex-col gap-4">
             <Checkbox
               label="below 5 lakh"
-              checked={filters.price[1] === 500000}
+              checked={isBelow5L}
               onChange={() => {
-                const checked = filters.price[1] === 500000;
-
-                const newFilters = {
+                const newFilters: Filters = {
                   ...filters,
-                  price: checked ? [minPrice, maxPrice] : [minPrice, 500000],
+                  price: isBelow5L ? [minPrice, maxPrice] : [minPrice, 500000],
                 };
 
                 setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
-            <Checkbox
-              label="5 - 8 lakh"
-              checked={
-                filters.price[1] === 800000 && filters.price[0] == 500000
-              }
-              onChange={() => {
-                const checked =
-                  filters.price[1] === 800000 && filters.price[0] == 500000;
 
+            <Checkbox
+              label="Above 10 lakh"
+              checked={isAbove10L}
+              onChange={() => {
                 const newFilters = {
                   ...filters,
-                  price: checked ? [minPrice, maxPrice] : [500000, 800000],
+                  price: isAbove10L
+                    ? [minPrice, maxPrice]
+                    : [1000000, maxPrice],
                 };
 
-                setFilters(newFilters);
-                updateURL(newFilters);
-              }}
-            />
-            <Checkbox
-              label="8 - 10 lakh"
-              checked={
-                filters.price[1] === 1000000 && filters.price[0] == 800000
-              }
-              onChange={() => {
-                const checked =
-                  filters.price[1] === 1000000 && filters.price[0] == 800000;
-
-                const newFilters = {
-                  ...filters,
-                  price: checked ? [minPrice, maxPrice] : [800000, 1000000],
-                };
-
-                setFilters(newFilters);
-                updateURL(newFilters);
-              }}
-            />
-            <Checkbox
-              label="above 10 lakh"
-              checked={filters.price[0] === 1000000}
-              onChange={() => {
-                const checked = filters.price[0] === 1000000;
-
-                const newFilters = {
-                  ...filters,
-                  price: checked ? [minPrice, maxPrice] : [1000000, maxPrice],
-                };
-
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
@@ -359,7 +322,6 @@ export default function Filter() {
                   year: checked ? [minYear, maxYear] : [maxYear - 1, maxYear],
                 };
 
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
@@ -373,7 +335,6 @@ export default function Filter() {
                   year: checked ? [minYear, maxYear] : [maxYear - 3, maxYear],
                 };
 
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
@@ -387,7 +348,6 @@ export default function Filter() {
                   year: checked ? [minYear, maxYear] : [maxYear - 5, maxYear],
                 };
 
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
@@ -528,21 +488,20 @@ export default function Filter() {
                   kms: checked ? [minKm, maxKm] : [minKm, 10000],
                 };
 
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
             <Checkbox
               label="< 20000 km"
-              checked={filters.kms[1] == 20000}
+              checked={filters.kms[1] == 20000 && filters.kms[0] == minKm}
               onChange={() => {
-                const checked = filters.kms[1] == 20000;
+                const checked =
+                  filters.kms[1] == 20000 && filters.kms[0] == minKm;
                 const newFilters = {
                   ...filters,
                   kms: checked ? [minKm, maxKm] : [minKm, 20000],
                 };
 
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
@@ -556,7 +515,6 @@ export default function Filter() {
                   kms: checked ? [minKm, maxKm] : [minKm, 50000],
                 };
 
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />

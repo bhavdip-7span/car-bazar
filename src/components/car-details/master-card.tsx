@@ -22,7 +22,9 @@ export default function MasterCard() {
 
   return (
     <div className=" sticky top-[200px] border border-secondary-200  rounded-lg p-6 shadow">
-      <Badge name={car?.badge} className="absolute top-2 right-2" />
+      {car?.badge && (
+        <Badge name={car.badge} className="absolute top-2 right-2" />
+      )}
 
       <h1 className="mt-2 font-bold text-xl">
         {car?.registration_year} {car?.brand} {car?.model}

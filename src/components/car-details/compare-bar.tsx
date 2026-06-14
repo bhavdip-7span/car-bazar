@@ -21,21 +21,9 @@ export default function CompareBar() {
           <div key={car.id} className="flex items-center gap-2 px-4">
             <Button
               variant="outline"
-              className="p-2 rounded-full"
+              className="py-2 px-3 rounded-full"
               onClick={() => removeCar(car.id)}
-              name={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="#bdbdbd"
-                    d="m8.382 17.025l-1.407-1.4L10.593 12L6.975 8.4L8.382 7L12 10.615L15.593 7L17 8.4L13.382 12L17 15.625l-1.407 1.4L12 13.41z"
-                  />
-                </svg>
-              }
+              name={" ✕"}
             />
             <div className="h-18 w-18 rounded-lg overflow-hidden">
               <img

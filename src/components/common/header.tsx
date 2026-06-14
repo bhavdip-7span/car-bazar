@@ -3,22 +3,20 @@ import Input from "../ui/input";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { CarBrands } from "@/constant/car-brand";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Button from "../ui/button";
 
 import { CarCitys } from "@/constant/car-city";
 export default function Header() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+
   const pathname = usePathname();
   const [search, setSearch] = useState("");
   const isHomePage = pathname === "/";
 
   useEffect(() => {
-    // if (pathname !== "/cars") return;
-
     const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(window.location.search);
 
       if (search.trim()) {
         params.set("search", search);
@@ -26,15 +24,12 @@ export default function Header() {
         params.delete("search");
       }
 
-      const newUrl = `/cars?${params.toString()}`;
-
-      if (newUrl !== `/cars?${searchParams.toString()}`) {
-        router.replace(newUrl);
-      }
+      router.replace(`/cars?${params.toString()}`);
     }, 500);
 
     return () => clearTimeout(timer);
   }, [search]);
+
   return (
     <div
       className={

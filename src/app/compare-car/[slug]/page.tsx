@@ -96,9 +96,10 @@ export default function CarCompare() {
             </div>
 
             {section.fields.map((field) => {
-              const winners = field.better
-                ? getWinnerIndexes(cars, field.key, field.better)
-                : [];
+              const winners =
+                "better" in field
+                  ? getWinnerIndexes(cars, field.key, field.better)
+                  : [];
 
               return (
                 <div key={field.key}>
