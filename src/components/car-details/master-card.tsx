@@ -48,14 +48,14 @@ export default function MasterCard() {
         </div>
       </div>
       <div className="bg-secondary-100 p-4 mt-2 rounded-lg flex  divide-x divide-primary-400">
-        <h2 className="text-lg font-semibold flex items-center pr-4">
+        <h2 className="text-sm md:text-lg font-semibold flex items-center pr-2 md:pr-4">
           ₹ {car?.discount_price.toLocaleString()}
           <span className=" line-through ml-4 text-xs">
             ₹ {car?.original_price.toLocaleString()}{" "}
           </span>
         </h2>
         {car ? (
-          <div className="flex gap-2 items-center pl-4">
+          <div className="flex gap-2 items-center pl-2 md:pl-4">
             <div className="p-2 rounded-full bg-primary-100">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -80,9 +80,12 @@ export default function MasterCard() {
                 EMI starts at
               </span>
               <span className="text-primary text-xs font-semibold">
-                {(((car?.discount_price - 50000) * 10 * 5) / 100 +
-                  (car?.discount_price - 50000)) /
-                  60}
+                ₹
+                {(
+                  (((car?.discount_price - 50000) * 10 * 5) / 100 +
+                    (car?.discount_price - 50000)) /
+                  60
+                ).toLocaleString()}
                 /mo
               </span>
             </div>
