@@ -17,7 +17,7 @@ export default function CarCompare() {
     }
   }, [params.slug]);
   const { cars } = useCompareStore();
-  const compareSlug = cars.map((car) => car.id).join("_vs_");
+  const compareSlug = cars.map((car) => car.slug).join("_vs_");
 
   function getWinnerIndexes(
     cars: Car[],
