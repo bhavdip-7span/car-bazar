@@ -115,7 +115,7 @@ export default function Header() {
             className={`hover:no-underline hover:text-primary font-semibold text-sm ${isHomePage ? "text-white" : "text-secondary"}`}
             href="/cars"
           >
-            All Cars
+            Cars
           </Link>
         </nav>
         <div className=" max-w-3/5 md:max-w-1/3 w-full">
