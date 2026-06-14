@@ -22,6 +22,10 @@ export default function Header() {
         params.set("search", search);
       } else {
         params.delete("search");
+        if (pathname === "/cars") {
+          router.replace(`/cars?${params.toString()}`);
+        }
+        return;
       }
 
       router.replace(`/cars?${params.toString()}`);
