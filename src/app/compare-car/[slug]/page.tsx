@@ -3,8 +3,22 @@ import { useCompareStore } from "@/store/comapre-car";
 import { compareSections } from "@/constant/compare-section";
 import CarCard from "@/components/ui/car-card";
 import { Car } from "@/types/car";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Button from "@/components/ui/button";
 export default function CarCompare() {
+  const params = useParams();
+  const [checkParams, setCheckParams] = useState(true);
+  useEffect(() => {
+    if (params.slug != compareSlug) {
+      setCheckParams(false);
+      console.log("hello");
+    }
+  }, [params.slug]);
   const { cars } = useCompareStore();
+  const compareSlug = cars.map((car) => car.id).join("_vs_");
+
   function getWinnerIndexes(
     cars: Car[],
     key: keyof Car,
@@ -31,6 +45,27 @@ export default function CarCompare() {
     return values
       .map((value, index) => (value === target ? index : -1))
       .filter((index) => index !== -1);
+  }
+  if (!checkParams) {
+    return (
+      <div className="flex min-h-[100vh-120x] justify-center items-center flex-col">
+        <img
+          src="/page-not-found.svg"
+          alt="page not found"
+          className="size-48 md:size-96"
+        ></img>
+        <h1 className=" text-lg md:text-xl font-semibold">
+          Comparison Not Found
+        </h1>
+        <p className=" text-sm md:text-base font-medium text-secondary-400 w-full max-w-96 text-center">
+          We couldn't find the cars in this comparison. Start a new comparison
+          from our listings.
+        </p>
+        <Link href="/cars" className="mt-2">
+          <Button name="Browse Cars" className="rounded-lg" />
+        </Link>
+      </div>
+    );
   }
   if (cars.length < 2) {
     return (
