@@ -12,6 +12,7 @@ import Image from "next/image";
 import Button from "../ui/button";
 
 import { getFilter } from "@/service/get-filter";
+import Spinner from "../ui/spinner";
 type Filters = {
   price: [number, number];
   year: [number, number];
@@ -34,16 +35,20 @@ export default function Filter() {
   const [carModelSearch, setCarModelSearch] = useState("");
   const [cars, setCars] = useState<Car[]>([]);
   const [filteredBrandModel, setFilteredBrandModel] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
   async function fetchCars() {
     try {
+      setLoading(true);
       const data = await getFilter();
-
+      console.log(data);
       if (data) {
         setCars(data);
       }
     } catch (error) {
       console.log("something wrong", error);
       setCars([]);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -228,24 +233,10 @@ export default function Filter() {
 
   const isAbove10L =
     filters.price[0] >= 1000000 && filters.price[1] === maxPrice;
-  if (cars.length == 0) {
-    return (
-      <div className="flex flex-col justify-center items-center w-full">
-        <Image
-          src="/page-not-found.svg"
-          alt="page not found"
-          width={192}
-          height={192}
-          className="w-48 h-48 "
-        />
-        <h3 className="text-2xl font-semibold mt-4">No Cars Found</h3>
-
-        <p className="text-secondary mt-2 max-w-96 text-center w-full">
-          Couldn't find a cars please try again later.
-        </p>
-      </div>
-    );
+  if (loading) {
+    <Spinner />;
   }
+
   return (
     <>
       <div className="flex flex-col gap-4 pb-10">
