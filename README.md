@@ -390,6 +390,6 @@ src
 | next-pwa      | Progressive Web App Support  |
 | Vercel        | Deployment                   |
 
-```
-```
 
+🔗 Loom Video:
+https://www.loom.com/share/4046971bcda14278af8f2853a4641ca0
