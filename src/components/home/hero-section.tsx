@@ -1,14 +1,17 @@
 import Link from "next/link";
+import Image from "next/image";
 export default function HeroSection() {
   return (
     <section className="relative h-[100vh] max-w-xxl mx-auto w-full">
-      <img
-        src="/hero-car-image.jpg"
+      <Image
+        src="/hero-section-1.jpg"
         alt="hero section image"
-        className="absolute inset-0 w-full h-full object-cover"
+        fill
+        priority
+        className="object-cover"
       />
 
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-black/50" />
 
       <div className="relative z-10 max-w-7xl mx-auto h-full flex items-center px-4 md:px-8">
         <div className="max-w-xl text-white">
@@ -16,12 +19,12 @@ export default function HeroSection() {
             India's Trusted Used Car Marketplace
           </p>
 
-          <h1 className="text-3xl md:text-6xl font-bold leading-tight mt-2 md:mt-4 w-full md:w-md">
+          <h1 className="text-3xl md:text-6xl font-bold leading-tight mt-2  w-full md:w-md">
             Find Your Perfect Ride
           </h1>
 
-          <p className=" mt-2 md:mt-6 text-base md:text-lg text-gray-200">
-            Browse thousands of verified used cars, compare prices
+          <p className=" mt-2 md:mt-4 text-base md:text-lg text-white max-w-xs w-full">
+            Browse thousands of verified used cars compare prices
           </p>
 
           <div className="flex gap-4 mt-8">

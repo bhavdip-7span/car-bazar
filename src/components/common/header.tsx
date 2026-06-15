@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { CarBrands } from "@/constant/car-brand";
 import { useRouter, usePathname } from "next/navigation";
 import Button from "../ui/button";
+import Image from "next/image";
 
 import { CarCitys } from "@/constant/car-city";
 export default function Header() {
@@ -22,6 +23,10 @@ export default function Header() {
         params.set("search", search);
       } else {
         params.delete("search");
+        if (pathname === "/cars") {
+          router.replace(`/cars?${params.toString()}`);
+        }
+        return;
       }
 
       router.replace(`/cars?${params.toString()}`);
@@ -34,13 +39,15 @@ export default function Header() {
     <div
       className={
         isHomePage
-          ? "absolute top-0 left-0 right-0 z-50"
+          ? "absolute top-0 left-0 right-0 z-50 backdrop-blur-xs bg-white/10 "
           : "border-b border-secondary-200 shadow bg-white"
       }
     >
       <div className="flex justify-between items-center  max-w-xxl mx-auto w-full h-20 px-4 lg:px-8 ">
         <Link href="/" className="flex items-center gap-2 cursor-pointers">
-          <img src="/logo.ico" alt="logo" className="size-16 lg::size-20" />
+          <div className="relative w-16 h-16 lg:w-20 lg:h-20">
+            <Image src="/logo.ico" alt="logo" fill className="object-contain" />
+          </div>
           <p
             className={` font-bold text-base lg:text-2xl ${isHomePage ? " text-white" : "text-black"}`}
           >

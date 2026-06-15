@@ -36,12 +36,11 @@ export default function PopularBrandSection() {
             >
               <div
                 className="
-                  w-40 h-40
+                  w-28 h-28 px-8 py-6
                   rounded-3xl
-                  border
-                  border-gray-300
+                 relative
                   bg-white
-                  shadow-sm
+                 
                   hover:shadow-xl
                   transition-all
                   duration-300
@@ -55,12 +54,12 @@ export default function PopularBrandSection() {
                 <Image
                   src={brand.image}
                   alt={brand.name}
-                  width={60}
-                  height={60}
                   className="object-contain"
+                  fill
+                  loading="lazy"
                 />
 
-                <span className="font-medium text-center">{brand.name}</span>
+                {/* <span className="font-medium text-center">{brand.name}</span> */}
               </div>
             </Link>
           ))}

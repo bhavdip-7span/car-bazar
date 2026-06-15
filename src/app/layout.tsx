@@ -5,7 +5,8 @@ import Header from "@/components/common/header";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://car-bazar-zeta.vercel.app"),
-
+  manifest: "/manifest.json",
+  themeColor: "#000000",
   title: {
     default: "CarBazar – Buy Used Cars Online",
     template: "%s | CarBazar",

@@ -1,15 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+
 import RangeSlider from "../ui/range-silder";
 import Accordion from "../ui/accodion";
 import Checkbox from "../ui/checkbox";
 import Input from "../ui/input";
 import type { Car } from "@/types/car";
 import { useRouter } from "next/navigation";
-import { useSearchParams, usePathname } from "next/navigation";
-
+import { usePathname } from "next/navigation";
+import type { CarFilters } from "@/types/car-filter";
 import Button from "../ui/button";
+
+import { getFilter } from "@/service/get-filter";
+import Spinner from "../ui/spinner";
+
 type Filters = {
   price: [number, number];
   year: [number, number];
@@ -25,35 +29,58 @@ type Filters = {
   seats: number[];
   bodyType: string[];
 };
-export default function Filter() {
-  const searchParams = useSearchParams();
+type FilterProps = {
+  filters: CarFilters;
+  brands: string[];
+  models: string[];
+  colors: string[];
+  ownership: string[];
+  bodyType: string[];
+  fuelTypes: string[];
+  location: string[];
+  seats: number[];
+  transmissions: string[];
+
+  minPrice: number;
+  maxPrice: number;
+
+  minYear: number;
+  maxYear: number;
+
+  minKm: number;
+  maxKm: number;
+  searchParamString: string;
+  updateURL: (filters: any) => void;
+};
+export default function Filter({
+  filters,
+  updateURL,
+  minPrice,
+  maxPrice,
+  minYear,
+  maxYear,
+  minKm,
+  maxKm,
+  transmissions,
+  models,
+  brands,
+  colors,
+  fuelTypes,
+  ownership,
+  location,
+  seats,
+  bodyType,
+  searchParamString,
+}: FilterProps) {
   const [expandAll, setExpandAll] = useState(false);
   const pathname = usePathname();
   const [carModelSearch, setCarModelSearch] = useState("");
-  const [cars, setCars] = useState<Car[]>([]);
+
   const [filteredBrandModel, setFilteredBrandModel] = useState<string[]>([]);
-  async function fetchCars() {
-    try {
-      const { data, error } = await supabase.from("cars").select("*");
 
-      if (error) {
-        console.log(error.message);
-        return;
-      }
-
-      setCars(data ?? []);
-    } catch (error) {
-      console.log("something wrong", error);
-      setCars([]);
-    }
-  }
-
-  useEffect(() => {
-    fetchCars();
-  }, []);
   useEffect(() => {
     if (!carModelSearch.trim()) return;
-    console.log("hello");
+
     const search = carModelSearch.trim().toLocaleLowerCase();
     const filteredBrandModel = [...brands, ...models].filter((item) =>
       item.toLowerCase().includes(search),
@@ -61,147 +88,61 @@ export default function Filter() {
     setFilteredBrandModel(filteredBrandModel || []);
   }, [carModelSearch]);
   const router = useRouter();
-  const updateURL = (filters: any) => {
-    const params = new URLSearchParams(window.location.search);
 
-    // update only what changed
-    filters.brands.length
-      ? params.set("brands", filters.brands.join(","))
-      : params.delete("brands");
-    filters.models.length
-      ? params.set("models", filters.models.join(","))
-      : params.delete("models");
-
-    filters.colors.length
-      ? params.set("colors", filters.colors.join(","))
-      : params.delete("colors");
-    filters.bodyType.length
-      ? params.set("body_type", filters.bodyType.join(","))
-      : params.delete("body_type");
-
-    filters.fuelTypes.length
-      ? params.set("fuel_types", filters.fuelTypes.join(","))
-      : params.delete("fuel_types");
-    filters.location.length
-      ? params.set("location", filters.location.join(","))
-      : params.delete("location");
-
-    filters.transmissions.length
-      ? params.set("transmissions", filters.transmissions.join(","))
-      : params.delete("transmissions");
-    filters.owner.length
-      ? params.set("ownership", filters.owner.join(","))
-      : params.delete("ownership");
-    filters.seats.length
-      ? params.set("seats", filters.seats.join(","))
-      : params.delete("seats");
-    filters.engine
-      ? params.set("engine_cc", filters.engine)
-      : params.delete("engine_cc");
-
-    const isPriceChanged =
-      filters.price[0] !== minPrice || filters.price[1] !== maxPrice;
-
-    if (isPriceChanged) {
-      params.set("min_price", String(filters.price[0]));
-      params.set("max_price", String(filters.price[1]));
-    } else {
-      params.delete("min_price");
-      params.delete("max_price");
-    }
-
-    const isYearChanged =
-      filters.year[0] !== minYear || filters.year[1] !== maxYear;
-    if (isYearChanged) {
-      params.set("min_year", String(filters.year[0]));
-      params.set("max_year", String(filters.year[1]));
-    } else {
-      params.delete("min_year");
-      params.delete("max_year");
-    }
-    const isKmChanged = filters.kms[0] !== minKm || filters.kms[1] !== maxKm;
-    if (isKmChanged) {
-      params.set("min_km", String(filters.kms[0]));
-      params.set("max_km", String(filters.kms[1]));
-    } else {
-      params.delete("min_km");
-      params.delete("max_km");
-    }
-    router.push(`?${params.toString()}`);
-  };
   useEffect(() => {
-    if (!cars.length) return;
+    setFilters((prev) => ({
+      ...prev,
+      price:
+        prev.price[0] === 0 && prev.price[1] === 0
+          ? [minPrice, maxPrice]
+          : prev.price,
+      year:
+        prev.year[0] === 0 && prev.year[1] === 0
+          ? [minYear, maxYear]
+          : prev.year,
+      kms: prev.kms[0] === 0 && prev.kms[1] === 0 ? [minKm, maxKm] : prev.kms,
+    }));
+  }, [minPrice, maxPrice, minYear, maxYear, minKm, maxKm]);
 
+  useEffect(() => {
     setFilters({
       price: [
-        Number(searchParams.get("min_price")) || minPrice,
-        Number(searchParams.get("max_price")) || maxPrice,
+        Number(filters.price[0] || minPrice),
+        Number(filters.price[1] || maxPrice),
       ],
       year: [
-        Number(searchParams.get("min_year")) || minYear,
-        Number(searchParams.get("max_year")) || maxYear,
+        Number(filters.year[0] || minYear),
+        Number(filters.year[1] || maxYear),
       ],
-      kms: [
-        Number(searchParams.get("min_km")) || minKm,
-        Number(searchParams.get("max_km")) || maxKm,
-      ],
-      location: searchParams.get("location")?.split(",") || [],
-      bodyType: searchParams.get("body_type")?.split(",") || [],
-      brands: searchParams.get("brands")?.split(",") || [],
-      colors: searchParams.get("colors")?.split(",") || [],
-      fuelTypes: searchParams.get("fuel_types")?.split(",") || [],
-      transmissions: searchParams.get("transmissions")?.split(",") || [],
-      models: searchParams.get("models")?.split(",") || [],
-      owner: searchParams.get("ownership")?.split(",") || [],
-      seats: searchParams.get("seats")?.split(",").map(Number) || [],
-      engine: searchParams.get("engine_cc"),
+      kms: [Number(filters.kms[0] || minKm), Number(filters.kms[1] || maxKm)],
+      location: filters.location,
+      bodyType: filters.bodyType,
+      brands: filters.brands,
+      colors: filters.colors,
+      fuelTypes: filters.fuelTypes,
+      transmissions: filters.transmissions,
+      models: filters.models,
+      owner: filters.ownership,
+      seats: filters.seats,
+      engine: filters.engine,
     });
-  }, [cars, searchParams]);
-
-  const brands = [...new Set(cars.map((car) => car.brand?.trim()))];
-
-  const models = [...new Set(cars.map((car) => car.model?.trim()))];
-
-  const colors = [...new Set(cars.map((car) => car.color))];
-  const ownership = [...new Set(cars.map((car) => car.ownership))];
-  const bodyType = [...new Set(cars.map((car) => car.body_type))];
-
-  const fuelTypes = [...new Set(cars.map((car) => car.fuel_type))];
-  const location = [...new Set(cars.map((car) => car.registration_location))];
-  const seats = [...new Set(cars.map((car) => car.seats))];
-
-  const transmissions = [...new Set(cars.map((car) => car.transmission))];
-  const prices = cars.map((car) => car.original_price);
-
-  const minPrice = Math.min(...prices) || 0;
-  const maxPrice = Math.max(...prices) || 0;
-  const years = cars.map((car) => car.registration_year);
-
-  const minYear = Math.min(...years) || 0;
-  const maxYear = Math.max(...years) || 0;
-  const kms = cars.map((car) => car.km_driven);
-
-  const minKm = Math.min(...kms) || 0;
-  const maxKm = Math.max(...kms) || 0;
+  }, [searchParamString]);
 
   const initialFilters: Filters = {
-    price: [
-      Number(searchParams.get("min_price")) || minPrice,
-      Number(searchParams.get("max_price")) || maxPrice,
-    ],
+    price: [minPrice, maxPrice],
     year: [minYear, maxYear],
     kms: [minKm, maxKm],
 
-    brands: searchParams.get("brands")?.split(",") || [],
-    bodyType: searchParams.get("body_type")?.split(",") || [],
-    seats: searchParams.get("seats")?.split(",").map(Number) || [],
-    location: searchParams.get("location")?.split(",") || [],
-    colors: searchParams.get("colors")?.split(",") || [],
-    fuelTypes: searchParams.get("fuel_types")?.split(",") || [],
-    transmissions: searchParams.get("transmissions")?.split(",") || [],
-    models: searchParams.get("models")?.split(",") || [],
-    owner: searchParams.get("owner")?.split(",") || [],
-    engine: searchParams.get("engine_cc"),
+    brands: filters.brands,
+    bodyType: filters.bodyType,
+    seats: filters.seats,
+    location: filters.location,
+    colors: filters.colors,
+    fuelTypes: filters.fuelTypes,
+    transmissions: filters.transmissions,
+    models: filters.models,
+    owner: filters.ownership,
+    engine: filters.engine,
   };
   const defaultFilters: Filters = {
     price: [minPrice, maxPrice],
@@ -218,18 +159,18 @@ export default function Filter() {
     owner: [],
     engine: null,
   };
-  const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [filter, setFilters] = useState<Filters>(initialFilters);
 
   function clearFilter() {
     setFilters(defaultFilters);
     router.push(pathname);
   }
-  const isFiltersActive = searchParams.toString() ? true : false;
-  const isBelow5L = filters.price[0] === minPrice && filters.price[1] <= 500000;
-  const isBetween5Lto8L =
-    filters.price[0] >= 500000 && filters.price[1] <= 800000;
+  const isFiltersActive = searchParamString.toString() ? true : false;
+  const isBelow5L = filter.price[0] === minPrice && filter.price[1] <= 500000;
+  console.log(minPrice);
   const isAbove10L =
     filters.price[0] >= 1000000 && filters.price[1] === maxPrice;
+
   return (
     <>
       <div className="flex flex-col gap-4 pb-10">
@@ -253,10 +194,10 @@ export default function Filter() {
             min={minPrice}
             max={maxPrice}
             step={10000}
-            value={filters.price}
+            value={filter.price}
             onChange={(value) => {
               const newFilters = {
-                ...filters,
+                ...filter,
                 price: value,
               };
 
@@ -269,12 +210,11 @@ export default function Filter() {
               label="below 5 lakh"
               checked={isBelow5L}
               onChange={() => {
-                const newFilters: Filters = {
-                  ...filters,
+                const newFilters = {
+                  ...filter,
                   price: isBelow5L ? [minPrice, maxPrice] : [minPrice, 500000],
                 };
 
-                setFilters(newFilters);
                 updateURL(newFilters);
               }}
             />
@@ -300,10 +240,10 @@ export default function Filter() {
             min={minYear}
             max={maxYear}
             step={1}
-            value={filters.year}
+            value={filter.year}
             onChange={(value) => {
               const newFilters = {
-                ...filters,
+                ...filter,
                 year: value,
               };
 
@@ -314,9 +254,9 @@ export default function Filter() {
           <div className="mt-4 flex flex-col gap-4">
             <Checkbox
               label="less then 1 year old"
-              checked={filters.year[0] == maxYear - 1}
+              checked={filter.year[0] == maxYear - 1}
               onChange={() => {
-                const checked = filters.year[0] == maxYear - 1;
+                const checked = filter.year[0] == maxYear - 1;
                 const newFilters = {
                   ...filters,
                   year: checked ? [minYear, maxYear] : [maxYear - 1, maxYear],
@@ -327,11 +267,11 @@ export default function Filter() {
             />
             <Checkbox
               label="less then 3 year old"
-              checked={filters.year[0] == maxYear - 3}
+              checked={filter.year[0] == maxYear - 3}
               onChange={() => {
-                const checked = filters.year[0] == maxYear - 3;
+                const checked = filter.year[0] == maxYear - 3;
                 const newFilters = {
-                  ...filters,
+                  ...filter,
                   year: checked ? [minYear, maxYear] : [maxYear - 3, maxYear],
                 };
 
@@ -340,9 +280,9 @@ export default function Filter() {
             />
             <Checkbox
               label="less then 5 year old"
-              checked={filters.year[0] == maxYear - 5}
+              checked={filter.year[0] == maxYear - 5}
               onChange={() => {
-                const checked = filters.year[0] == maxYear - 5;
+                const checked = filter.year[0] == maxYear - 5;
                 const newFilters = {
                   ...filters,
                   year: checked ? [minYear, maxYear] : [maxYear - 5, maxYear],
@@ -382,10 +322,10 @@ export default function Filter() {
                   <Checkbox
                     key={brand}
                     label={brand}
-                    checked={filters.brands.includes(brand)}
+                    checked={filter.brands.includes(brand)}
                     onChange={() => {
                       const newFilters = {
-                        ...filters,
+                        ...filter,
                         brands: filters.brands.includes(brand)
                           ? filters.brands.filter((b) => b !== brand)
                           : [...filters.brands, brand],
@@ -403,13 +343,13 @@ export default function Filter() {
                   <Checkbox
                     key={brand}
                     label={brand}
-                    checked={filters.models.includes(brand)}
+                    checked={filter.models.includes(brand)}
                     onChange={() => {
                       const newFilters = {
-                        ...filters,
-                        models: filters.models.includes(brand)
-                          ? filters.models.filter((b) => b !== brand)
-                          : [...filters.models, brand],
+                        ...filter,
+                        models: filter.models.includes(brand)
+                          ? filter.models.filter((b) => b !== brand)
+                          : [...filter.models, brand],
                       };
 
                       setFilters(newFilters);
@@ -427,25 +367,25 @@ export default function Filter() {
                     key={item}
                     label={item}
                     checked={
-                      filters.brands.includes(item) ||
-                      filters.models.includes(item)
+                      filter.brands.includes(item) ||
+                      filter.models.includes(item)
                     }
                     onChange={() => {
                       if (brands.includes(item)) {
                         const newFilters = {
-                          ...filters,
-                          brands: filters.brands.includes(item)
-                            ? filters.brands.filter((b) => b !== item)
-                            : [...filters.brands, item],
+                          ...filter,
+                          brands: filter.brands.includes(item)
+                            ? filter.brands.filter((b) => b !== item)
+                            : [...filter.brands, item],
                         };
                         setFilters(newFilters);
                         updateURL(newFilters);
                       } else {
                         const newFilters = {
-                          ...filters,
-                          models: filters.models.includes(item)
-                            ? filters.models.filter((b) => b !== item)
-                            : [...filters.models, item],
+                          ...filter,
+                          models: filter.models.includes(item)
+                            ? filter.models.filter((b) => b !== item)
+                            : [...filter.models, item],
                         };
                         setFilters(newFilters);
                         updateURL(newFilters);
@@ -466,10 +406,10 @@ export default function Filter() {
             min={minKm}
             max={maxKm}
             step={1000}
-            value={filters.kms}
+            value={filter.kms}
             onChange={(value) => {
               const newFilters = {
-                ...filters,
+                ...filter,
                 kms: value,
               };
 
@@ -480,11 +420,11 @@ export default function Filter() {
           <div className="mt-4 flex flex-col gap-4">
             <Checkbox
               label="< 10000 km"
-              checked={filters.kms[1] == 10000}
+              checked={filter.kms[1] == 10000}
               onChange={() => {
-                const checked = filters.kms[1] == 10000;
+                const checked = filter.kms[1] == 10000;
                 const newFilters = {
-                  ...filters,
+                  ...filter,
                   kms: checked ? [minKm, maxKm] : [minKm, 10000],
                 };
 
@@ -493,12 +433,12 @@ export default function Filter() {
             />
             <Checkbox
               label="< 20000 km"
-              checked={filters.kms[1] == 20000 && filters.kms[0] == minKm}
+              checked={filter.kms[1] == 20000 && filters.kms[0] == minKm}
               onChange={() => {
                 const checked =
-                  filters.kms[1] == 20000 && filters.kms[0] == minKm;
+                  filter.kms[1] == 20000 && filters.kms[0] == minKm;
                 const newFilters = {
-                  ...filters,
+                  ...filter,
                   kms: checked ? [minKm, maxKm] : [minKm, 20000],
                 };
 
@@ -507,11 +447,11 @@ export default function Filter() {
             />
             <Checkbox
               label="< 50000 km"
-              checked={filters.kms[1] == 50000}
+              checked={filter.kms[1] == 50000}
               onChange={() => {
                 const checked = filters.kms[1] == 50000;
                 const newFilters = {
-                  ...filters,
+                  ...filter,
                   kms: checked ? [minKm, maxKm] : [minKm, 50000],
                 };
 
@@ -540,13 +480,13 @@ export default function Filter() {
               <Checkbox
                 key={item}
                 label={item}
-                checked={filters.fuelTypes.includes(item)}
+                checked={filter.fuelTypes.includes(item)}
                 onChange={() => {
                   const newFilters = {
-                    ...filters,
-                    fuelTypes: filters.fuelTypes.includes(item)
-                      ? filters.fuelTypes.filter((b) => b !== item)
-                      : [...filters.fuelTypes, item],
+                    ...filter,
+                    fuelTypes: filter.fuelTypes.includes(item)
+                      ? filter.fuelTypes.filter((b) => b !== item)
+                      : [...filter.fuelTypes, item],
                   };
 
                   setFilters(newFilters);
@@ -562,13 +502,13 @@ export default function Filter() {
               <Checkbox
                 key={item}
                 label={item}
-                checked={filters.transmissions.includes(item)}
+                checked={filter.transmissions.includes(item)}
                 onChange={() => {
                   const newFilters = {
-                    ...filters,
-                    transmissions: filters.transmissions.includes(item)
-                      ? filters.transmissions.filter((b) => b !== item)
-                      : [...filters.transmissions, item],
+                    ...filter,
+                    transmissions: filter.transmissions.includes(item)
+                      ? filter.transmissions.filter((b) => b !== item)
+                      : [...filter.transmissions, item],
                   };
 
                   setFilters(newFilters);
@@ -584,13 +524,13 @@ export default function Filter() {
               <Checkbox
                 key={item}
                 label={item}
-                checked={filters.colors.includes(item)}
+                checked={filter.colors.includes(item)}
                 onChange={() => {
                   const newFilters = {
-                    ...filters,
-                    colors: filters.colors.includes(item)
-                      ? filters.colors.filter((b) => b !== item)
-                      : [...filters.colors, item],
+                    ...filter,
+                    colors: filter.colors.includes(item)
+                      ? filter.colors.filter((b) => b !== item)
+                      : [...filter.colors, item],
                   };
 
                   setFilters(newFilters);
@@ -606,13 +546,13 @@ export default function Filter() {
               <Checkbox
                 key={item}
                 label={item}
-                checked={filters.location.includes(item)}
+                checked={filter.location.includes(item)}
                 onChange={() => {
                   const newFilters = {
-                    ...filters,
-                    location: filters.location.includes(item)
-                      ? filters.location.filter((b) => b !== item)
-                      : [...filters.location, item],
+                    ...filter,
+                    location: filter.location.includes(item)
+                      ? filter.location.filter((b) => b !== item)
+                      : [...filter.location, item],
                   };
 
                   setFilters(newFilters);
@@ -628,13 +568,13 @@ export default function Filter() {
               <Checkbox
                 key={item}
                 label={item}
-                checked={filters.bodyType.includes(item)}
+                checked={filter.bodyType.includes(item)}
                 onChange={() => {
                   const newFilters = {
-                    ...filters,
-                    bodyType: filters.bodyType.includes(item)
-                      ? filters.bodyType.filter((b) => b !== item)
-                      : [...filters.bodyType, item],
+                    ...filter,
+                    bodyType: filter.bodyType.includes(item)
+                      ? filter.bodyType.filter((b) => b !== item)
+                      : [...filter.bodyType, item],
                   };
 
                   setFilters(newFilters);
@@ -650,13 +590,13 @@ export default function Filter() {
               <Checkbox
                 key={item}
                 label={item}
-                checked={filters.owner.includes(item)}
+                checked={filter.owner.includes(item)}
                 onChange={() => {
                   const newFilters = {
                     ...filters,
-                    owner: filters.owner.includes(item)
-                      ? filters.owner.filter((b) => b !== item)
-                      : [...filters.owner, item],
+                    owner: filter.owner.includes(item)
+                      ? filter.owner.filter((b) => b !== item)
+                      : [...filter.owner, item],
                   };
 
                   setFilters(newFilters);
@@ -674,13 +614,13 @@ export default function Filter() {
                 <Checkbox
                   key={item}
                   label={String(item)}
-                  checked={filters.seats.includes(item)}
+                  checked={filter.seats.includes(item)}
                   onChange={() => {
                     const newFilters = {
-                      ...filters,
-                      seats: filters.seats.includes(item)
-                        ? filters.seats.filter((b) => b !== item)
-                        : [...filters.seats, item],
+                      ...filter,
+                      seats: filter.seats.includes(item)
+                        ? filter.seats.filter((b) => b !== item)
+                        : [...filter.seats, item],
                     };
 
                     setFilters(newFilters);
@@ -694,11 +634,11 @@ export default function Filter() {
           <div className="mt-4 flex flex-col gap-4 max-h-96 pb-8">
             <Checkbox
               label="below 999cc"
-              checked={filters.engine === "999"}
+              checked={filter.engine === "999"}
               onChange={() => {
                 const newFilters = {
-                  ...filters,
-                  engine: filters.engine === "999" ? null : "999",
+                  ...filter,
+                  engine: filter.engine === "999" ? null : "999",
                 };
 
                 setFilters(newFilters);
@@ -707,11 +647,11 @@ export default function Filter() {
             />
             <Checkbox
               label="below 1299cc"
-              checked={filters.engine === "1299"}
+              checked={filter.engine === "1299"}
               onChange={() => {
                 const newFilters = {
-                  ...filters,
-                  engine: filters.engine === "1299" ? null : "1299",
+                  ...filter,
+                  engine: filter.engine === "1299" ? null : "1299",
                 };
 
                 setFilters(newFilters);
@@ -720,11 +660,11 @@ export default function Filter() {
             />
             <Checkbox
               label="below 1999cc"
-              checked={filters.engine === "1999"}
+              checked={filter.engine === "1999"}
               onChange={() => {
                 const newFilters = {
-                  ...filters,
-                  engine: filters.engine === "1999" ? null : "1999",
+                  ...filter,
+                  engine: filter.engine === "1999" ? null : "1999",
                 };
 
                 setFilters(newFilters);
@@ -733,11 +673,11 @@ export default function Filter() {
             />
             <Checkbox
               label="above 1999cc"
-              checked={filters.engine === "above_1999"}
+              checked={filter.engine === "above_1999"}
               onChange={() => {
                 const newFilters = {
-                  ...filters,
-                  engine: filters.engine === "above_1999" ? null : "above_1999",
+                  ...filter,
+                  engine: filter.engine === "above_1999" ? null : "above_1999",
                 };
 
                 setFilters(newFilters);
