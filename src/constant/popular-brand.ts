@@ -16,10 +16,7 @@ export const popularBrands: Brand[] = [
     name: "Honda",
     image: "/brands/honda.svg",
   },
-  {
-    name: "Tata",
-    image: "/brands/tata.svg",
-  },
+
   {
     name: "Mahindra",
     image: "/brands/mahindra.svg",
@@ -43,5 +40,9 @@ export const popularBrands: Brand[] = [
   {
     name: "MG",
     image: "/brands/mg.svg",
+  },
+  {
+    name: "Tata",
+    image: "/brands/tata.svg",
   },
 ];

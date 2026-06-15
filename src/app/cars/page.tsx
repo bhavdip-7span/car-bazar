@@ -3,7 +3,7 @@ import CarsClient from "./car-client";
 
 export default function Page() {
   return (
-    <Suspense fallback={<div>Loading cars...</div>}>
+    <Suspense fallback={null}>
       <CarsClient />
     </Suspense>
   );
