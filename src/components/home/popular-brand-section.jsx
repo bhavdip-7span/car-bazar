@@ -17,7 +17,7 @@ export default function PopularBrandSection() {
           Explore thousands of verified used cars from leading manufacturers.
         </p>
       </div>
-      <div className="relative overflow-x-hidden  py-4">
+      <div className="relative overflow-x-hidden py-4">
         <motion.div
           className="flex gap-6 w-max"
           initial={{ x: 0 }}

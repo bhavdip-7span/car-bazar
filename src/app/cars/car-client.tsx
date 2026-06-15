@@ -12,8 +12,10 @@ import Button from "@/components/ui/button";
 import { getFilter } from "@/service/get-filter";
 import { useCarFilters } from "@/hook/use-filter";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 import Spinner from "@/components/ui/spinner";
+import Link from "next/link";
+import Badge from "@/components/ui/badge";
 export default function CarClinet() {
   const [sortBy, setSortBy] = useState("relevance");
   const { filters, searchParamsString } = useCarFilters();
@@ -57,7 +59,7 @@ export default function CarClinet() {
   const seats = [...new Set(cars.map((car) => car.seats))];
 
   const transmissions = [...new Set(cars.map((car) => car.transmission))];
-  const prices = cars.map((car) => car.original_price);
+  const prices = cars.map((car) => car.discount_price);
 
   const minPrice = prices.length ? Math.min(...prices) : 0;
   const maxPrice = prices.length ? Math.max(...prices) : 0;
@@ -227,27 +229,28 @@ export default function CarClinet() {
           query = query.lte("engine_cc", Number(filters.engine));
         }
       }
-      if (filters.price[0] != minPrice) {
-        query = query.gte("original_price", Number(minPrice));
+      if (filters.price[0] != minPrice && filters.price[0] != 0) {
+        console.log(filters.price[0]);
+        query = query.gte("discount_price", Number(filters.price[0]));
       }
 
-      if (filters.price[1] != maxPrice) {
-        query = query.lte("original_price", Number(maxPrice));
+      if (filters.price[1] != maxPrice && filters.price[1] != 0) {
+        query = query.lte("discount_price", Number(filters.price[1]));
       }
 
-      if (filters.year[0] != minYear) {
-        query = query.gte("registration_year", Number(minYear));
+      if (filters.year[0] != minYear && filters.year[0] != 0) {
+        query = query.gte("registration_year", Number(filters.year[0]));
       }
 
-      if (filters.year[1] != maxYear) {
-        query = query.lte("registration_year", Number(maxYear));
+      if (filters.year[1] != maxYear && filters.year[1] != 0) {
+        query = query.lte("registration_year", Number(filters.year[1]));
       }
-      if (filters.kms[0] != minKm) {
-        query = query.gte("km_driven", Number(minKm));
+      if (filters.kms[0] != minKm && filters.kms[0] != 0) {
+        query = query.gte("km_driven", Number(filters.kms[0]));
       }
 
-      if (filters.kms[1] != maxKm) {
-        query = query.lte("km_driven", Number(maxKm));
+      if (filters.kms[1] != maxKm && filters.kms[0] != 0) {
+        query = query.lte("km_driven", Number(filters.kms[1]));
       }
       switch (sortBy) {
         case "price-asc":
@@ -397,7 +400,7 @@ export default function CarClinet() {
             </p>
             <div className="flex items-center justify-between mt-4 pr-4">
               <p className="font-semibold text-sm">
-                {data.length} Cars Available
+                {cars.length} Cars Available
               </p>
               <select
                 value={sortBy}
@@ -425,46 +428,97 @@ export default function CarClinet() {
             </div>
           ) : (
             <>
-              <div className=" p-4 border border-gray-300 rounded-lg shadow mb-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-semibold text-xl text-primary-500">
-                    Recently viewed cars
-                  </h2>
-                  <Button
-                    name="Clear"
-                    className="rounded-lg disabled:opacity-70 disabled:cursor-not-allowed px-4 py-2"
-                    disabled={recentCar.length == 0}
-                    onClick={() => clearRecentCar()}
-                  ></Button>
+              {/* {recentCar.length !== 0 && (
+                <div className=" p-4 border border-gray-300 rounded-lg shadow mb-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="font-semibold text-xl text-primary-500">
+                      Recently viewed cars
+                    </h2>
+                    <Button
+                      name="Clear"
+                      className="rounded-lg disabled:opacity-70 disabled:cursor-not-allowed px-4 py-2"
+                      disabled={recentCar.length == 0}
+                      onClick={() => clearRecentCar()}
+                    ></Button>
+                  </div>
+                  <div className="flex mb-4 gap-4 overflow-x-auto flex-nowrap scroll-smooth snap-x snap-mandatory scrollbar-thin ">
+                    {recentCar.map((item) => (
+                      <div className="flex-shrink-0 max-w-78">
+                        <CarCard cars={item} key={item.slug} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex mb-4 gap-4 overflow-x-auto flex-nowrap scroll-smooth snap-x snap-mandatory scrollbar-thin ">
-                  {recentCar.length != 0
-                    ? recentCar.map((item) => (
-                        <div className="flex-shrink-0 max-w-78">
-                          <CarCard cars={item} key={item.slug} />
-                        </div>
-                      ))
-                    : "No cars viewed yet"}
-                </div>
-              </div>
+              )} */}
               <div className="grid grid-cols-1 justify-items-center lg:grid-cols-2 xl:grid-cols-3 items-center  gap-4">
                 <AnimatePresence>
-                  {data.map((car) => (
-                    <motion.div
-                      key={car.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      whileHover={{
-                        y: -2,
-                        transition: { duration: 0.2 },
-                      }}
-                    >
-                      <CarCard cars={car} />
-                    </motion.div>
-                  ))}
+                  {data.map((car, index) => {
+                    if (index == 5 && recentCar.length != 0) {
+                      return (
+                        <div className=" p-4 border  max-h-[400px] h-full border-gray-200 rounded-lg shadow mb-4 max-w-78 w-full overflow-hidden">
+                          <div className="flex justify-between items-center mb-4">
+                            <h2 className="font-semibold text-xl text-primary-500">
+                              Recently viewed
+                            </h2>
+                            {/* <Button
+                              name="Clear"
+                              className="rounded-lg disabled:opacity-70 disabled:cursor-not-allowed px-4 py-2"
+                              disabled={recentCar.length == 0}
+                              onClick={() => clearRecentCar()}
+                            ></Button> */}
+                          </div>
+                          <div className="flex mb-4 gap-4 overflow-y-auto flex-col h-full pb-12">
+                            {recentCar.map((item) => (
+                              <Link href={`/cars/${item.slug}`}>
+                                <div className="flex-shrink-0 max-w-78">
+                                  <div className="flex gap-2 border border-secondary-300 p-2 shadow rounded-lg">
+                                    <div className="w-20 h-20 relative">
+                                      <Image
+                                        src={item.images[0]}
+                                        alt={item?.brand}
+                                        fill
+                                        className="w-full h-full object-cover rounded-lg"
+                                      />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                      <span>{item.model}</span>
+
+                                      <Badge
+                                        name={String(item.registration_year)}
+                                        className="text-secondary-800 bg-secondary-100 px-2 py-1 w-fit"
+                                      />
+                                      <div>
+                                        <span className="text-sm font-semibold text-primary">
+                                          ₹
+                                          {item.discount_price.toLocaleString()}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <motion.div
+                        key={car.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        whileHover={{
+                          y: -2,
+                          transition: { duration: 0.2 },
+                        }}
+                      >
+                        <CarCard cars={car} />
+                      </motion.div>
+                    );
+                  })}
                 </AnimatePresence>
 
                 {loading &&

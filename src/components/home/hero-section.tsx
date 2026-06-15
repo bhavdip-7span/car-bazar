@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 export default function HeroSection() {
   return (
-    <section className="relative h-[100vh] max-w-xxl mx-auto w-full">
+    <section className="relative h-[100vh] ">
       <Image
         src="/hero-section-1.jpg"
         alt="hero section image"
