@@ -39,7 +39,7 @@ export default function Header() {
     <div
       className={
         isHomePage
-          ? "absolute top-0 left-0 right-0 z-50"
+          ? "absolute top-0 left-0 right-0 z-50 backdrop-blur-xs bg-white/10 "
           : "border-b border-secondary-200 shadow bg-white"
       }
     >
