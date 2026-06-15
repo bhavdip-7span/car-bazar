@@ -249,3 +249,147 @@ High-quality images delivered through Cloudinary with optimized loading.
 ```
 ```
 
+## 🏗️ Architecture
+
+The application is built using Next.js App Router with a modular architecture focused on performance, SEO, and scalability.
+
+### System Architecture
+
+```text
+                        User
+                          │
+                          ▼
+               Next.js App Router
+            (Pages, Layouts, Metadata)
+                          │
+                          ▼
+                    Components
+      (Home, Listings, Details, Compare, UI)
+                          │
+                          ▼
+                     Hooks & Utils
+                          │
+                          ▼
+                    Service Layer
+                          │
+                          ▼
+                     Supabase
+               (Car Listings Data)
+                          │
+                          ▼
+                     Zustand
+          (Compare Cars, Recent Views)
+                          │
+                          ▼
+                    Rendered UI
+```
+
+### Image Management
+
+```text
+Cloudinary
+    │
+    ▼
+Upload Car Images
+    │
+    ▼
+Copy Generated Image URL
+    │
+    ▼
+Save URL in Supabase
+    │
+    ▼
+Next.js Fetches URL
+    │
+    ▼
+Optimized Image Rendering
+```
+
+### SEO Architecture
+
+```text
+Next.js Metadata API
+        │
+        ├── Dynamic Title
+        ├── Dynamic Description
+        ├── Open Graph Tags
+        ├── Twitter Cards
+        ├── Canonical URLs
+        ├── robots.txt
+        └── sitemap.xml
+```
+
+### PWA Architecture
+
+```text
+User
+  │
+  ▼
+Service Worker
+  │
+  ├── Asset Caching
+  ├── Offline Support
+  └── Installable Experience
+```
+
+### Animation Layer
+
+Framer Motion and Lottie are used to enhance user experience through:
+
+* Page transitions
+* Component animations
+* Interactive UI effects
+* Loading states
+* Empty state illustrations
+
+### State Management
+
+Zustand manages client-side state including:
+
+* Compare Cars
+* Recently Viewed Cars
+* similar car
+* Recommended car
+
+### Folder Structure
+
+```bash
+src
+├── app/                    # Next.js App Router pages and layouts
+├── components/
+│   ├── car-details/        # Car details page components
+│   ├── car-listing/        # Car listing page components
+│   ├── common/             # Shared reusable components
+│   ├── home/               # Home page components
+│   ├── icons/              # Custom SVG and icon components
+│   └── ui/                 # Reusable UI components
+├── constant/              # Application constants
+├── hook/                  # Custom React hooks
+├── lib/                   # Utility libraries and configurations
+├── service/               # API and data fetching services
+├── store/                 # Zustand state management stores
+├── types/                 # TypeScript type definitions
+├── utils/                 # Helper utility functions
+└── ...
+```
+### Key Technologies
+
+| Technology    | Purpose                      |
+| ------------- | ---------------------------- |
+| Next.js       | Application Framework        |
+| TypeScript    | Type Safety                  |
+| Supabase      | Car Listings Database        |
+| Cloudinary    | Car Image Hosting            |
+| Zustand       | State Management             |
+| Framer Motion | UI Animations                |
+| Lottie React  | Interactive Animations       |
+| Tailwind CSS  | Styling                      |
+| Metadata API  | SEO Optimization             |
+| robots.txt    | Search Engine Crawling Rules |
+| sitemap.xml   | Search Engine Indexing       |
+| next-pwa      | Progressive Web App Support  |
+| Vercel        | Deployment                   |
+
+```
+```
+
