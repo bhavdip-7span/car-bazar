@@ -1,7 +1,7 @@
 🚗 Car Bazar – Used Car Listing Platform
 -----------------------------------------------
 Car Bazar is a modern used car marketplace built with Next.js and TypeScript, allowing users to browse, search, filter, and explore used cars with a fast and responsive experience. The platform provides advanced filtering, sorting, SEO-friendly pages, recently viewed cars, smooth animations, and optimized image delivery for a seamless car-buying journey.
-
+🔗 Live Demo: https://car-bazar-zeta.vercel.app
 ## Features
 
 | Feature                 | Description                                                |
