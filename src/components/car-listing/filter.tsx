@@ -21,7 +21,7 @@ type Filters = {
   models: string[];
   brands: string[];
   location: string[];
-  owner: string[];
+  ownership: string[];
   fuelTypes: string[];
   transmissions: string[];
   colors: string[];
@@ -75,7 +75,7 @@ export default function Filter({
   const [expandAll, setExpandAll] = useState(false);
   const pathname = usePathname();
   const [carModelSearch, setCarModelSearch] = useState("");
-
+  console.log(filters);
   const [filteredBrandModel, setFilteredBrandModel] = useState<string[]>([]);
 
   useEffect(() => {
@@ -122,7 +122,7 @@ export default function Filter({
       fuelTypes: filters.fuelTypes,
       transmissions: filters.transmissions,
       models: filters.models,
-      owner: filters.ownership,
+      ownership: filters.ownership,
       seats: filters.seats,
       engine: filters.engine,
     });
@@ -141,7 +141,7 @@ export default function Filter({
     fuelTypes: filters.fuelTypes,
     transmissions: filters.transmissions,
     models: filters.models,
-    owner: filters.ownership,
+    ownership: filters.ownership,
     engine: filters.engine,
   };
   const defaultFilters: Filters = {
@@ -156,7 +156,7 @@ export default function Filter({
     transmissions: [],
     bodyType: [],
     models: [],
-    owner: [],
+    ownership: [],
     engine: null,
   };
   const [filter, setFilters] = useState<Filters>(initialFilters);
@@ -590,13 +590,13 @@ export default function Filter({
               <Checkbox
                 key={item}
                 label={item}
-                checked={filter.owner.includes(item)}
+                checked={filters.ownership.includes(item)}
                 onChange={() => {
                   const newFilters = {
                     ...filters,
-                    owner: filter.owner.includes(item)
-                      ? filter.owner.filter((b) => b !== item)
-                      : [...filter.owner, item],
+                    ownership: filters.ownership.includes(item)
+                      ? filters.ownership.filter((b) => b !== item)
+                      : [...filters.ownership, item],
                   };
 
                   setFilters(newFilters);
