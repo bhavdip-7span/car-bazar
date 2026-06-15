@@ -319,18 +319,6 @@ Next.js Metadata API
         └── sitemap.xml
 ```
 
-### PWA Architecture
-
-```text
-User
-  │
-  ▼
-Service Worker
-  │
-  ├── Asset Caching
-  ├── Offline Support
-  └── Installable Experience
-```
 
 ### Animation Layer
 
