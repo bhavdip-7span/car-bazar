@@ -317,7 +317,7 @@ export default function Filter({
           {!carModelSearch ? (
             <div className="mt-4 flex flex-col gap-4">
               <h4>Brand</h4>
-              <div className="max-h-36 overflow-y-auto scrollbar-thin">
+              <div className="max-h-40 overflow-y-auto scrollbar-thin">
                 {brands.map((brand) => (
                   <Checkbox
                     key={brand}
@@ -338,7 +338,7 @@ export default function Filter({
                 ))}
               </div>
               <h4>Model</h4>
-              <div className="max-h-56 overflow-y-auto scrollbar-thin">
+              <div className="max-h-40 overflow-y-auto scrollbar-thin">
                 {models.map((brand) => (
                   <Checkbox
                     key={brand}

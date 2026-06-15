@@ -29,6 +29,7 @@ export default function CarClinet() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const router = useRouter();
+  const [count, setCount] = useState<String>("0");
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   async function fetchFilter() {
     try {
@@ -186,7 +187,7 @@ export default function CarClinet() {
       const from = currentPage * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
-      let query = supabase.from("cars").select("*");
+      let query = supabase.from("cars").select("*", { count: "exact" });
 
       if (filters.search) {
         query = query.or(
@@ -195,6 +196,9 @@ export default function CarClinet() {
       }
       if (filters.brands.length) {
         query = query.in("brand", filters.brands);
+      }
+      if (filters.models.length) {
+        query = query.in("model", filters.models);
       }
       if (filters.ownership.length) {
         query = query.in("ownership", filters.ownership);
@@ -283,13 +287,13 @@ export default function CarClinet() {
       // pagination LAST
       query = query.range(from, to);
 
-      const { data, error } = await query;
+      const { data, error, count } = await query;
 
       if (error) {
         console.log(error.message);
         return;
       }
-
+      setCount(String(count));
       if (data) {
         setdata((prev) => {
           const merged = currentPage === 0 ? data : [...prev, ...data];
@@ -399,9 +403,7 @@ export default function CarClinet() {
               prices.
             </p>
             <div className="flex items-center justify-between mt-4 pr-4">
-              <p className="font-semibold text-sm">
-                {cars.length} Cars Available
-              </p>
+              <p className="font-semibold text-sm">{count} Cars Available</p>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -528,6 +530,28 @@ export default function CarClinet() {
                 <div ref={loadMoreRef} className="h-10" />
               </div>
             </>
+          )}
+          {count == "0" && recentCar.length != 0 && (
+            <div className=" p-4 border border-gray-200 rounded-lg shadow my-4 mr-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="font-semibold text-xl text-primary-500">
+                  Recently viewed cars
+                </h2>
+                {/* <Button
+                  name="Clear"
+                  className="rounded-lg disabled:opacity-70 disabled:cursor-not-allowed px-4 py-2"
+                  disabled={recentCar.length == 0}
+                  onClick={() => clearRecentCar()}
+                ></Button> */}
+              </div>
+              <div className="flex mb-4 gap-4 overflow-x-auto flex-nowrap scroll-smooth snap-x snap-mandatory scrollbar-thin ">
+                {recentCar.map((item) => (
+                  <div className="flex-shrink-0 max-w-78">
+                    <CarCard cars={item} key={item.slug} />
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>
